@@ -446,12 +446,12 @@ export default function SwapScreen({navigation, route}) {
                             </CommonTouchableOpacity>
                             <CommonTouchableOpacity
                                 onPress={() => {
-                                    onChangePlatform('POLYGON');
-                                    setPlatform('POLYGON');
+                                    onChangePlatform('TRON');
+                                    setPlatform('TRON');
                                 }}
                                 style={[
                                     styles.segmentItem,
-                                    platform === 'POLYGON'
+                                    platform === 'TRON'
                                         ? {
                                               backgroundColor: theme.button,
                                               borderRadius: 10,
@@ -461,11 +461,11 @@ export default function SwapScreen({navigation, route}) {
                                 <CommonText
                                     style={{
                                         color:
-                                            platform === 'POLYGON'
+                                            platform === 'TRON'
                                                 ? theme.text
                                                 : theme.subText,
                                     }}>
-                                    POLYGON
+                                    TRC20
                                 </CommonText>
                             </CommonTouchableOpacity>
                         </View>

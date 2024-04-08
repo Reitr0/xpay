@@ -13,7 +13,7 @@ function getAllTokens() {
     return async dispatch => {
         const {success, data} = await TokenService.getAllTokens();
         if (success === true) {
-            const {ALL, ETH, BSC, POLYGON} = data;
+            const {ALL, ETH, BSC, POLYGON, TRON} = data;
             const nativeEth = {
                 id: 'ethereum',
                 name: 'Ethereum',
@@ -38,12 +38,21 @@ function getAllTokens() {
                 address: '',
                 logoURI: applicationProperties.logoURI.polygon,
             };
+            const nativeTron = {
+                id: 'tron',
+                name: 'Tron',
+                symbol: 'TRX',
+                isNative: true,
+                address: '',
+                logoURI: applicationProperties.logoURI.tron,
+            };
             dispatch(
                 getAllTokensSuccess({
                     ALL,
                     ETH: [nativeEth, ...ETH],
                     BSC: [nativeBnb, ...BSC],
                     POLYGON: [nativeMatic, ...POLYGON],
+                    TRON: [nativeTron, ...TRON],
                 }),
             );
         }

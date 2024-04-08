@@ -76,31 +76,24 @@ export const applicationProperties = {
     dapps: [
         {
             id: 'aave',
-            name: 'Aave',
-            desc: 'Open source and non-custodial protocal to earn interest on deposits & borrow assets',
+            name: 'METAXBANK',
+            desc: '',
             logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7278.png',
-            url: 'https://app.aave.com/',
+            url: 'https://metaxbank.io/',
         },
         {
             id: 'uniswap',
-            name: 'Uniswap Exchange',
-            desc: 'Uniswap is a protocal for automated token exchange',
+            name: 'METAXBOOK',
+            desc: '',
             logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png',
-            url: 'https://app.uniswap.org/#/swap',
+            url: 'https://metaxbook.io',
         },
         {
             id: '1inch.io',
-            name: '1inch.io',
-            desc: 'Token Swap Aggregator',
+            name: 'METAXTRADE',
+            desc: '',
             logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png',
-            url: 'https://app.1inch.io/#/1/unified/swap/ETH/DAI',
-        },
-        {
-            id: 'pancakeswap.finance',
-            name: 'Exchange | PancakeSwap',
-            desc: 'The most popular AMM on BSC by user count! Earn CAKE through yield farming or win it in the Lottery, then stake it in Syrup Pools to earn more tokens! Initial Farm Offerings (new token launch model pioneered by PancakeSwap), NFTs, and more, on a platform you can trust.',
-            logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7186.png',
-            url: 'https://pancakeswap.finance/swap',
+            url: 'https://trade1.metaxtrade.io',
         },
     ],
     walletConnect: {
@@ -137,6 +130,14 @@ export const applicationProperties = {
             symbol: 'MATIC',
             logoURI:
                 'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png',
+        },
+        {
+            id: 'tron',
+            name: 'Tron',
+            chain: 'TRON',
+            symbol: 'TRX',
+            logoURI:
+                'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
         },
     ],
 };

@@ -1,5 +1,5 @@
-import {getMarketsSuccess} from '@persistence/market/MarketReducer';
 import {MarketService} from '@persistence/market/MarketService';
+import {getMarketsSuccess} from '@persistence/market/MarketReducer';
 
 export const MarketAction = {
     getMarkets,

@@ -17,8 +17,9 @@ async function getAllTokens() {
             BSC: [],
             ETH: [],
             POLYGON: [],
+            TRON: [],
         };
-        const {ALL, ETH, BSC, POLYGON} = customTokenList;
+        const {ALL, ETH, BSC, POLYGON, TRON} = customTokenList;
         return {
             success,
             data: {
@@ -26,6 +27,7 @@ async function getAllTokens() {
                 ETH: [...data.ETH, ...ETH],
                 BSC: [...data.BSC, ...BSC],
                 POLYGON: [...data.POLYGON, ...POLYGON],
+                TRON: [...data.TRON, ...TRON],
             },
         };
     }
@@ -39,12 +41,14 @@ async function addToken(token) {
         BSC: [],
         ETH: [],
         POLYGON: [],
+        TRON: [],
     };
     let all = customTokenList.ALL;
     all.push(token);
     let eth = customTokenList.ETH;
     let bsc = customTokenList.BSC;
     let polygon = customTokenList.POLYGON;
+    let tron = customTokenList.TRON;
     switch (token.chainId) {
         case 1:
             eth.push(token);
@@ -55,12 +59,16 @@ async function addToken(token) {
         case 137:
             polygon.push(token);
             break;
+        case 999:
+            tron.push(token);
+            break;
     }
     const res = {
         ALL: all,
         ETH: eth,
         BSC: bsc,
         POLYGON: polygon,
+        TRON: tron,
     };
     await StorageService.setItem(CUSTOM_TOKEN_LIST, res);
     return {

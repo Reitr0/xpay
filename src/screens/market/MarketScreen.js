@@ -1,53 +1,45 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-    FlatList,
-    RefreshControl,
-    SafeAreaView,
-    StyleSheet,
-    View,
-} from 'react-native';
-import CommonTouchableOpacity from '@components/commons/CommonTouchableOpacity';
-import FastImage from 'react-native-fast-image';
-import CommonImage from '@components/commons/CommonImage';
-import {useDispatch, useSelector} from 'react-redux';
-import CommonText from '@components/commons/CommonText';
-import Price from '@components/Price';
-import {useTranslation} from 'react-i18next';
-import {LineChart} from 'react-native-svg-charts';
-import {MarketAction} from '@persistence/market/MarketAction';
-import usePriceHook from '@persistence/price/PriceHook';
-import NumberFormatted from '@components/NumberFormatted';
+import React, { useCallback, useEffect, useState } from "react";
+import { RefreshControl, SafeAreaView, StyleSheet, View } from "react-native";
+import CommonTouchableOpacity from "@components/commons/CommonTouchableOpacity";
+import FastImage from "react-native-fast-image";
+import CommonImage from "@components/commons/CommonImage";
+import { useDispatch, useSelector } from "react-redux";
+import { MarketAction } from "@persistence/market/MarketAction";
+import CommonText from "@components/commons/CommonText";
+import { formatPercentage } from "@src/utils/CurrencyUtil";
+import { LineChart } from "react-native-chart-kit";
+import Price from "@components/Price";
+import CommonFlatList from "@components/commons/CommonFlatList";
+import { useTranslation } from "react-i18next";
 
-export default function MarketScreen({navigation, route}) {
-    const {t} = useTranslation();
-    const {theme} = useSelector(state => state.ThemeReducer);
-    const {markets} = useSelector(state => state.MarketReducer);
-    const {activeWallet} = useSelector(state => state.WalletReducer);
-    const {getPriceData} = usePriceHook();
+export default function MarketScreen({ navigation, route }) {
+    const { t } = useTranslation();
+    const { theme } = useSelector(state => state.ThemeReducer);
+    const { markets } = useSelector(state => state.MarketReducer);
     const dispatch = useDispatch();
-    const [refreshingMarket, setRefreshingMarket] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     useEffect(() => {
         (async () => {
-            loadMarket();
+            setRefreshing(true);
+            dispatch(MarketAction.getMarkets(30, true)).then(() => {
+                setRefreshing(false);
+            });
         })();
-    }, [activeWallet.chain, loadMarket]);
-    const onRefreshMarket = useCallback(async () => {
-        loadMarket();
-    }, [loadMarket]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const loadMarket = useCallback(() => {
-        setRefreshingMarket(true);
+    }, []);
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
         dispatch(MarketAction.getMarkets(30, true)).then(() => {
-            setRefreshingMarket(false);
+            setRefreshing(false);
         });
-    });
-    const renderItem = ({item}) => {
+    }, []);
+    const renderItem = ({ item }) => {
+        const up = item.price_change_percentage_24h >= 0;
         return (
             <CommonTouchableOpacity
                 onPress={async () => {
-                    navigation.navigate('MarketDetailScreen', {coin: item});
+                    navigation.navigate("MarketDetailScreen", { coin: item });
                 }}
-                style={[styles.item, {borderBottomColor: theme.border}]}>
+                style={[styles.item, { borderBottomColor: theme.border }]}>
                 <CommonImage
                     style={styles.img}
                     source={{
@@ -57,72 +49,91 @@ export default function MarketScreen({navigation, route}) {
                     }}
                 />
                 <View style={styles.itemContent}>
-                    <View style={{width: 100}}>
-                        <CommonText
-                            style={[styles.itemName, {color: theme.text2}]}
-                            numberOfLines={1}>
+                    <View style={{ width: 100 }}>
+                        <CommonText style={[styles.itemName, { color: theme.text2 }]} numberOfLines={1}>
                             {item.name}
                         </CommonText>
                         <CommonText
                             style={[
                                 styles.itemName,
-                                {color: theme.subText, fontSize: 12},
+                                { color: theme.subText, fontSize: 12 },
                             ]}
                             numberOfLines={1}>
                             {item.symbol.toUpperCase()}
                         </CommonText>
                     </View>
-                    <View style={{width: 100, alignItems: 'flex-end'}}>
-                        <Price
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                        <LineChart
+                            withVerticalLabels={false}
+                            withHorizontalLabels={false}
+                            withHorizontalLines={false}
+                            width={120}
+                            height={30}
+                            bezier
+                            withDots={false}
+                            withVerticalLines={false}
+                            withOuterLines={false}
+                            chartConfig={{
+                                color: () => (up ? "#00ff0a" : "red"),
+                                backgroundGradientFromOpacity: 0,
+                                backgroundGradientToOpacity: 0,
+                            }}
+                            style={styles.chart}
+                            data={{
+                                datasets: [
+                                    {
+                                        data: item.sparkline_in_7d.price.slice(
+                                            item.sparkline_in_7d.length -
+                                            Math.round(
+                                                item.sparkline_in_7d
+                                                    .length / 7,
+                                            ),
+                                            item.sparkline_in_7d.length,
+                                        ),
+                                    },
+                                ],
+                            }}
+                        />
+                    </View>
+                    <View style={{ width: 100, alignItems: "flex-end" }}>
+                        <Price numberOfLines={1} style={{ color: theme.text2 }}>{item.current_price}</Price>
+                        <CommonText
                             numberOfLines={1}
-                            style={{color: getPriceData(item.id, 4)}}>
-                            {getPriceData(item.id, 0)}
-                        </Price>
-                        <NumberFormatted
-                            decimals={2}
-                            sign={true}
-                            style={{color: getPriceData(item.id, 4)}}
-                            symbol={'%'}>
-                            {getPriceData(item.id, 1)}
-                        </NumberFormatted>
+                            style={{ color: up ? "#00ff0a" : "red" }}>
+                            {formatPercentage(item.price_change_percentage_24h)}
+                        </CommonText>
                     </View>
                 </View>
             </CommonTouchableOpacity>
         );
     };
     return (
-        <View style={[styles.container, {backgroundColor: theme.background4}]}>
-            <SafeAreaView style={styles.container}>
-                <View
-                    style={[
-                        styles.header,
-                        {backgroundColor: theme.background4},
-                    ]}>
-                    <View style={styles.contentHeader}>
-                        <CommonText style={styles.headerTitle}>
-                            {t('market.market')}
-                        </CommonText>
-                    </View>
+        <SafeAreaView style={styles.container}>
+            <View style={[styles.gapBackground, { backgroundColor: theme.background4 }]}></View>
+            <View style={[styles.header, { backgroundColor: theme.background4 }]}>
+                <View style={styles.contentHeader}>
+                    <CommonText style={styles.headerTitle}>{t("market.market")}</CommonText>
                 </View>
-                <View
-                    style={[
-                        {flex: 1, paddingHorizontal: 10},
-                        {backgroundColor: theme.background},
-                    ]}>
-                    <FlatList
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshingMarket}
-                                onRefresh={onRefreshMarket}
-                            />
-                        }
-                        data={markets}
-                        renderItem={renderItem}
-                        showsVerticalScrollIndicator={false}
-                    />
-                </View>
-            </SafeAreaView>
-        </View>
+            </View>
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <CommonFlatList
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                    data={markets}
+                    renderItem={renderItem}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
+        </SafeAreaView>
     );
 }
 const styles = StyleSheet.create({
@@ -133,21 +144,20 @@ const styles = StyleSheet.create({
         borderWidth: 0,
     },
     item: {
-        flexDirection: 'row',
+        flexDirection: "row",
         borderBottomWidth: 0.5,
-        alignItems: 'center',
+        alignItems: "center",
         height: 75,
     },
     img: {
         width: 42,
         height: 42,
-        borderRadius: 100,
     },
     itemContent: {
         flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     itemName: {
         marginLeft: 10,
@@ -155,10 +165,10 @@ const styles = StyleSheet.create({
     },
     itemSymbol: {
         fontSize: 13,
-        textAlign: 'left',
+        textAlign: "left",
     },
     searchContainer: {
-        flexDirection: 'row',
+        flexDirection: "row",
         paddingTop: 10,
         paddingBottom: 20,
         paddingHorizontal: 15,
@@ -167,7 +177,7 @@ const styles = StyleSheet.create({
         flex: 4,
         fontSize: 16,
         borderWidth: 1,
-        backgroundColor: 'red',
+        backgroundColor: "red",
         paddingHorizontal: 10,
         height: 45,
         borderTopLeftRadius: 5,
@@ -176,15 +186,15 @@ const styles = StyleSheet.create({
     close: {
         flex: 1.2,
         height: 43,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
         marginTop: 1,
         borderTopEndRadius: 5,
         borderBottomEndRadius: 5,
     },
     choose_network: {
         fontSize: 20,
-        textAlign: 'center',
+        textAlign: "center",
         marginTop: 15,
         marginBottom: 25,
     },
@@ -196,36 +206,36 @@ const styles = StyleSheet.create({
     header: {
         height: 48,
         paddingHorizontal: 10,
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     leftHeader: {
         width: 30,
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "flex-start",
     },
     contentHeader: {
         flex: 1,
-        justifyContent: 'center',
-        height: '100%',
+        justifyContent: "center",
+        height: "100%",
     },
     rightHeader: {
         width: 30,
-        height: '100%',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
+        height: "100%",
+        alignItems: "flex-end",
+        justifyContent: "center",
     },
     headerTitle: {
         fontSize: 15,
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
     gapBackground: {
         height: 50,
-        width: '100%',
-        position: 'absolute',
+        width: "100%",
+        position: "absolute",
         top: 0,
     },
 });

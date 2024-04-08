@@ -9,8 +9,6 @@ export const MarketService = {
 async function getMarkets(limit, sparkline) {
     try {
         const markets = await MarketFactory.getMarkets(limit, sparkline);
-        const id = markets.map(market => market.id).join(' ');
-        console.log(id);
         return {
             success: true,
             data: markets,

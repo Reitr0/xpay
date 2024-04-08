@@ -11,12 +11,18 @@ import CommonTouchableOpacity from '@components/commons/CommonTouchableOpacity';
 
 function TotalBalance({style, id, decimals = 5, ...rest}) {
     const {activeWallet} = useSelector(state => state.WalletReducer);
-    const [hide, setHide] = useState(true);
+    const [hide, setHide] = useState(false);
     useEffect(() => {}, []);
     return (
         <>
             {!hide && (
-                <Price style={style} decimals={decimals} {...rest}>
+                <Price
+                    onPress={() => {
+                        setHide(true);
+                    }}
+                    style={style}
+                    decimals={decimals}
+                    {...rest}>
                     {activeWallet.totalBalance}
                 </Price>
             )}
@@ -24,9 +30,6 @@ function TotalBalance({style, id, decimals = 5, ...rest}) {
                 <CommonTouchableOpacity
                     onPress={() => {
                         setHide(false);
-                        setTimeout(() => {
-                            setHide(true);
-                        }, 3000);
                     }}
                     style={styles.container}>
                     <CommonText style={style}>*****</CommonText>
