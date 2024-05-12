@@ -34,7 +34,7 @@ import BigNumber from 'bignumber.js';
 import {WalletAction} from '@persistence/wallet/WalletAction';
 import Balance from '@components/Balance';
 
-export default function SwapScreen({navigation, route}) {
+export default function DummySwapScreen({navigation, route}) {
     const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
     const {fee} = useSelector(state => state.FeeReducer);
@@ -63,9 +63,9 @@ export default function SwapScreen({navigation, route}) {
                     address: activeAsset.contract,
                     chainId: CHAIN_ID_MAP[activeAsset.chain],
                     decimals: activeAsset.decimals,
-                    logoURI: activeAsset.logoURI,
-                    name: activeAsset.name,
-                    symbol: activeAsset.symbol,
+                    logoURI: 'https://iili.io/JgYFd5G.webp',
+                    name: 'MXGOLD',
+                    symbol: 'MXGOLD',
                     balance: activeAsset.balance,
                     isNative: activeAsset.type === ASSET_TYPE_COIN,
                 };

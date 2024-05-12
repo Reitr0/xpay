@@ -43,8 +43,4 @@ export const configProperties = {
         api: 'https://api.coingecko.com/api/v3/',
         key: 'CG-FUxEdRfN9kCaYKtz9MXawP1x',
     },
-    coinmarketcap: {
-        api: 'https://pro-api.coinmarketcap.com/v1',
-        key: '4efa188c-f95a-4455-b190-23656ce06105',
-    },
 };

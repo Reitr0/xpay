@@ -135,7 +135,7 @@ export default function SettingScreen({navigation}) {
                         <CommonTouchableOpacity
                             onPress={async () => {
                                 await Linking.openURL(
-                                    applicationProperties.endpoints.about,
+                                    applicationProperties.dapps.url,
                                 );
                             }}
                             style={[

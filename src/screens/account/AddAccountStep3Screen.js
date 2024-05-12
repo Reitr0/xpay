@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, ToastAndroid, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import CommonText from '@components/commons/CommonText';
 import CommonBackButton from '@components/commons/CommonBackButton';
@@ -7,6 +7,7 @@ import CommonButton from '@components/commons/CommonButton';
 import {WalletFactory} from '@modules/core/factory/WalletFactory';
 import CommonTouchableOpacity from '@components/commons/CommonTouchableOpacity';
 import {useTranslation} from 'react-i18next';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 export default function AddAccountStep3Screen({navigation, route}) {
     const {t} = useTranslation();
@@ -29,8 +30,19 @@ export default function AddAccountStep3Screen({navigation, route}) {
             </CommonText>
         </View>
     );
+
+    const copyToClipboard = () => {
+        ToastAndroid.showWithGravity(
+            'Copied to clipboard',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM,
+        );
+        const joinedMnemonics = mnemonics.join(' ');
+        Clipboard.setString(joinedMnemonics);
+    };
+
     return (
-        <View style={[styles.container,{backgroundColor: theme.background4}]}>
+        <View style={[styles.container, {backgroundColor: theme.background4}]}>
             <SafeAreaView style={styles.container}>
                 <View
                     style={[
@@ -46,7 +58,11 @@ export default function AddAccountStep3Screen({navigation, route}) {
                         />
                     </View>
                 </View>
-                <View style={[styles.content,{backgroundColor: theme.background}]}>
+                <View
+                    style={[
+                        styles.content,
+                        {backgroundColor: theme.background},
+                    ]}>
                     <View style={styles.titleContainer}>
                         <CommonText
                             style={[styles.titleText, {color: theme.text2}]}>
@@ -61,7 +77,8 @@ export default function AddAccountStep3Screen({navigation, route}) {
                         {mnemonics && mnemonics.map(renderMnemonic)}
                     </View>
                     <View style={styles.copyContainer}>
-                        <CommonTouchableOpacity onPress={() => {}}>
+                        <CommonTouchableOpacity
+                            onPress={() => copyToClipboard()}>
                             <CommonText
                                 style={[styles.copy, {color: theme.button}]}>
                                 {t('setting.copy')}

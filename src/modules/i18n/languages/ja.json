@@ -222,7 +222,7 @@
     "token_logo": "ロゴ URI",
     "token_save": "保存",
     "token_not_found" : "トークンが見つかりません!",
-    "dapps.dapps" : "DApps",
+    "dapps.dapps" : "Explore",
     "stake.amount" : "ステーク金額",
     "total_offer_amount" : "オファーの合計金額",
     "token_found" : "トークンはすでに追加されています。",
@@ -231,6 +231,7 @@
     "menu_swap": "入れ替え",
     "menu_market": "マーケット",
     "menu_setup": "セットアップ",
-    "menu_dapps": "DApps"
+    "menu_dapps": "Explore",
+    "swap.comingsoon": "Coming Soon"
   }
 }

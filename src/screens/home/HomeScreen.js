@@ -86,6 +86,9 @@ function HomeScreen() {
                 <CommonImage
                     source={require('@assets/images/logo2.png')}
                     style={styles.logo}
+                    onPress={() => {
+                        navigation.navigate('AddTokenScreen');
+                    }}
                 />
             </View>
             <View style={[styles.balanceContainer]}>

@@ -49,8 +49,8 @@ export default function WalletSendScreen({navigation}) {
     const [serviceFee, setServiceFee] = useState(0);
     const actionSheetRef = useRef(null);
     const actionCamera = useRef(null);
-    const [refreshing] = useState(false);
-    const [gasFee] = useState({
+    const [refreshing, setRefreshing] = useState(false);
+    const [gasFee, setGasFee] = useState({
         BSC: 0.0006,
         ETH: 0.001,
         POLYGON: 0.03,
@@ -59,7 +59,7 @@ export default function WalletSendScreen({navigation}) {
         (async () => {
             initMaxAmount();
         })();
-    }, [initMaxAmount]);
+    }, []);
     const onRefresh = async () => {
         CommonLoading.show();
         dispatch(WalletAction.balance()).then(() => {
@@ -74,7 +74,6 @@ export default function WalletSendScreen({navigation}) {
         setDestination(0);
         dispatch(WalletAction.balance());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const initMaxAmount = () => {
         let max = activeWallet.activeAsset.balance;
         let makerFee = 1;

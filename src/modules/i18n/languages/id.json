@@ -222,7 +222,7 @@
     "token_logo": "Logo URI",
     "token_save": "Simpan",
     "token_not_found" : "Token tidak ditemukan!",
-    "dapps.dapps" : "DApps",
+    "dapps.dapps" : "Explore",
     "stake.amount" : "Jumlah Taruhan",
     "total_offer_amount" : "Total jumlah penawaran",
     "token_found" : "Token telah ditambahkan.",
@@ -231,6 +231,7 @@
     "menu_swap": "Tukar",
     "menu_market": "Pasar",
     "menu_setup": "Setting",
-    "menu_dapps": "DApps"
+    "menu_dapps": "Explore",
+    "swap.comingsoon": "Coming Soon"
   }
 }

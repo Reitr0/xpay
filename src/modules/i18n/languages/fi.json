@@ -222,7 +222,7 @@
     "token_logo": "Logo URI",
     "token_save": "I-save",
     "token_not_found" : "Hindi nahanap ang token!",
-    "dapps.dapps" : "DApps",
+    "dapps.dapps" : "Explore",
     "stake.amount" : "Halaga ng Stake",
     "total_offer_amount" : "Kabuuang halaga ng alok",
     "token_found" : "Naidagdag na ang token.",
@@ -231,6 +231,7 @@
     "menu_swap": "Magpalit",
     "menu_market": "Pamilihan",
     "menu_setup": "Mga Setting",
-    "menu_dapps": "DApps"
+    "menu_dapps": "Explore",
+    "swap.comingsoon": "Coming Soon"
   }
 }

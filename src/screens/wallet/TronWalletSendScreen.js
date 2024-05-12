@@ -55,7 +55,7 @@ export default function TronWalletSendScreen({navigation}) {
         (async () => {
             initMaxAmount();
         })();
-    }, [initMaxAmount]);
+    }, []);
     const onRefresh = async () => {
         CommonLoading.show();
         dispatch(WalletAction.balance()).then(() => {
@@ -69,7 +69,6 @@ export default function TronWalletSendScreen({navigation}) {
         setServiceFee(0);
         setDestination(0);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const initMaxAmount = () => {
         let max = activeWallet.activeAsset.balance;
         let makerFee = fee.rate;
@@ -379,7 +378,7 @@ export default function TronWalletSendScreen({navigation}) {
                             <View
                                 style={[
                                     styles.confirmTx,
-                                    {backgroundColor: theme.background},
+                                    {backgroundColor: theme.background2},
                                 ]}>
                                 <View
                                     style={[

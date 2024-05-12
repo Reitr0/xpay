@@ -222,7 +222,7 @@
     "token_logo": "URI biểu tượng",
     "token_save": "Lưu",
     "token_not_found" : "Không tìm thấy mã thông báo!",
-    "dapps.dapps" : "DApps",
+    "dapps.dapps" : "Explore",
     "stake.amount" : "Số tiền đặt cược",
     "total_offer_amount" : "Tổng số tiền ưu đãi",
     "token_found" : "Mã thông báo đã được thêm.",
@@ -231,6 +231,7 @@
     "menu_swap": "Hoán đổi",
     "men_market": "Chợ",
     "menu_setup": "Thiết lập",
-    "menu_dapps": "DApps"
+    "menu_dapps": "Explore",
+    "swap.comingsoon": "Coming Soon"
   }
 }

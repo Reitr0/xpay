@@ -11,6 +11,7 @@ import {useEffect} from 'react';
 import SwapScreen from '@screens/swap/SwapScreen';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import StakingScreen from '@screens/staking/StakingScreen';
+import DummySwapScreen from '@screens/swap/DummySwapScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -124,9 +125,27 @@ function BottomTabBarNavigator() {
             {/*        ),*/}
             {/*    }}*/}
             {/*/>*/}
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="SwapScreen"
                 component={SwapScreen}
+                options={{
+                    tabBarLabelStyle: {fontSize: 9},
+                    tabBarLabel: t('menu_swap'),
+                    tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
+                    tabBarActiveTintColor: theme.button,
+                    tabBarIcon: ({color, size}) => (
+                        <Icon
+                            name={'swap-horizontal'}
+                            size={size}
+                            type={Icons.Ionicons}
+                            color={color}
+                        />
+                    ),
+                }}
+            /> */}
+            <Tab.Screen
+                name="DummySwapScreen"
+                component={DummySwapScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 9},
                     tabBarLabel: t('menu_swap'),

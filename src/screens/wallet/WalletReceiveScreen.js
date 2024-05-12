@@ -32,8 +32,7 @@ export default function WalletReceiveScreen({navigation, route}) {
     return (
         <SafeAreaView
             style={[styles.container, {backgroundColor: theme.background4}]}>
-            <View
-                style={[styles.container, {backgroundColor: theme.background}]}>
+            <View   style={[styles.container, {backgroundColor: theme.background}]}>
                 <View
                     style={[
                         styles.header,

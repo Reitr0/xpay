@@ -222,7 +222,13 @@
     "token_logo": "Logo URI",
     "token_save": "Save",
     "token_not_found" : "Token not found!",
-    "dapps.dapps" : "DApps",
+    "dapps.dapps" : "Explore",
+    "dapps.name0" : "METAXBANK",
+    "dapps.name1" : "METAXBOOK",
+    "dapps.name2" : "METAXTRADE",
+    "dapps.desc0" : "Send Money Overseas Fast, Seamless and Low Cost",
+    "dapps.desc1" : "Your Next Social Media",
+    "dapps.desc2" : "The Future Of Trading",
     "stake.amount" : "Stake Amount",
     "total_offer_amount" : "Total offer amount",
     "token_found" : "Token has already been added.",
@@ -231,7 +237,7 @@
     "menu_swap": "Swap",
     "menu_market": "Market",
     "menu_setup": "Setup",
-    "menu_dapps": "DApps"
-
+    "menu_dapps": "Explore",
+    "swap.comingsoon": "Coming Soon"
   }
 }

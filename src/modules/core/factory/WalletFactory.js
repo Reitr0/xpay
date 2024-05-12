@@ -1,6 +1,6 @@
 import 'react-native-get-random-values';
 import '@ethersproject/shims';
-import {utils} from 'ethers';
+import {BigNumber, utils} from 'ethers';
 import {ProviderFactory} from '@modules/core/factory/ProviderFactory';
 import {BitcoinWallet} from '@modules/core/provider/bitcoin/BitcoinWallet';
 import {EthWallet} from '@modules/core/provider/eth/EthWallet';
@@ -28,7 +28,6 @@ export class WalletFactory {
             for (let i = 0; i < coins.length; i++) {
                 const coin = coins[i];
                 const provider = await ProviderFactory.getProvider(coin.chain);
-                // eslint-disable-next-line no-undef
                 const startTime = performance.now();
                 if (coin.chain === 'BTC') {
                     const btcWallet = new BitcoinWallet(provider);
@@ -114,7 +113,6 @@ export class WalletFactory {
                         all.push(baseTronWallet);
                     }
                 }
-                // eslint-disable-next-line no-undef
                 const endTime = performance.now();
                 const executionTime = endTime - startTime; // Calculate execution time
 
@@ -186,6 +184,32 @@ export class WalletFactory {
                             this.wallets[coin.chain] = eth;
                         }
                         all.push(baseEthWallet);
+                    }
+                } else if (coin.chain === 'TRON') {
+                    let tronWallet = this.wallets.TRON;
+                    if (!tronWallet) {
+                        tronWallet = new TronWallet(provider);
+                        const {success, data} = await tronWallet.fromPrivateKey(
+                            coin,
+                        );
+                        if (success) {
+                            tronWallet.setData(data);
+                            this.wallets[coin.chain] = tronWallet;
+                            all.push({
+                                ...data,
+                                privateKey: data.privateKey,
+                            });
+                        }
+                    } else {
+                        const baseTronWallet = {
+                            ...coin,
+                            walletAddress: tronWallet.data.walletAddress,
+                            privateKey: tronWallet.data.privateKey,
+                        };
+                        if (coin.type === ASSET_TYPE_COIN) {
+                            this.wallets[coin.chain] = new TronWallet(provider);
+                        }
+                        all.push(baseTronWallet);
                     }
                 }
             }

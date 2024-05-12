@@ -222,7 +222,7 @@
     "token_logo": "로고 URI",
     "token_save": "저장",
     "token_not_found": "토큰을 찾을 수 없습니다!",
-    "dapps.dapps": "DApp",
+    "dapps.dapps": "Explore",
     "stake.amount": "스테이크 금액",
     "total_offer_amount": "총 제안 금액",
     "token_found": "토큰이 이미 추가되었습니다.",
@@ -231,6 +231,7 @@
     "menu_swap": "교체",
     "menu_market": "시장",
     "menu_setup": "설정",
-    "menu_dapps": "DApp"
+    "menu_dapps": "Explore",
+    "swap.comingsoon": "Coming Soon"
   }
 }

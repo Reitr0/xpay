@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, ToastAndroid, View} from 'react-native';
 import CommonBackButton from '@components/commons/CommonBackButton';
 import CommonText from '@components/commons/CommonText';
 import {useTranslation} from 'react-i18next';
@@ -9,6 +9,7 @@ import CommonTouchableOpacity from '@components/commons/CommonTouchableOpacity';
 import CommonButton from '@components/commons/CommonButton';
 import {deleteUserPinCode} from '@haskkor/react-native-pincode';
 import {StackActions} from '@react-navigation/native';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 export default function MnemonicScreen({navigation}) {
     const {t} = useTranslation();
@@ -29,6 +30,17 @@ export default function MnemonicScreen({navigation}) {
             </CommonText>
         </View>
     );
+
+    const copyToClipboard = () => {
+        ToastAndroid.showWithGravity(
+            'Copied to clipboard',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM,
+        );
+        const joinedMnemonics = mnemonics.join(' ');
+        Clipboard.setString(joinedMnemonics);
+    };
+
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.container}>
@@ -57,10 +69,11 @@ export default function MnemonicScreen({navigation}) {
                         {mnemonics && mnemonics.map(renderMnemonic)}
                     </View>
                     <View style={styles.copyContainer}>
-                        <CommonTouchableOpacity onPress={() => {}}>
+                        <CommonTouchableOpacity
+                            onPress={() => copyToClipboard()}>
                             <CommonText
                                 style={[styles.copy, {color: theme.button}]}>
-                                Copy
+                                {t('setting.copy')}
                             </CommonText>
                         </CommonTouchableOpacity>
                     </View>

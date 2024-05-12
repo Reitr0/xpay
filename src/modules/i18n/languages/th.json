@@ -222,7 +222,7 @@
     "token_logo": "URI โลโก้",
     "token_save": "บันทึก",
     "token_not_found": "ไม่พบโทเค็น!",
-    "dapps.dapps" : "DApps",
+    "dapps.dapps" : "Explore",
     "stake.amount" : "จำนวนเดิมพัน",
     "total_offer_amount": "จำนวนข้อเสนอทั้งหมด",
     "token_found": "โทเค็นถูกเพิ่มแล้ว",
@@ -231,6 +231,7 @@
     "menu_swap": "สลับ",
     "menu_market": "ตลาด",
     "menu_setup": "ตั้งค่า",
-    "menu_dapps": "DApps"
+    "menu_dapps": "Explore",
+    "swap.comingsoon": "Coming Soon"
   }
 }

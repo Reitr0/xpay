@@ -16,9 +16,11 @@ import CommonFlatList from '@components/commons/CommonFlatList';
 import ActionSheet from 'react-native-actions-sheet';
 import WebView from 'react-native-webview';
 import Balance from '@components/Balance';
+import Price from '@components/Price';
+import {usePriceDetailHook} from '@persistence/price/PriceHook';
 import PriceById from '@components/PriceById';
 
-function WalletDetailScreen({}) {
+function WalletDetailScreen({route}) {
     const {t} = useTranslation();
     const actionSheetRef = useRef(null);
     const [url, setUrl] = useState('');
@@ -35,20 +37,19 @@ function WalletDetailScreen({}) {
             getTransactions(activeWallet.activeAsset);
             CommonLoading.hide();
         });
-    }, [activeWallet.activeAsset, dispatch, getTransactions]);
+    }, []);
     useEffect(() => {
         (async () => {
             await getTransactions(activeWallet.activeAsset);
         })();
-    }, [activeWallet.activeAsset, getTransactions]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const getTransactions = useCallback(async coin => {
-        const {data} = await WalletFactory.getTransactions({
+    }, []);
+    const getTransactions = async coin => {
+        const {success, data} = await WalletFactory.getTransactions({
             ...coin,
             walletAddress: activeWallet.activeAsset.walletAddress,
         });
         setTransactions(data);
-    });
+    };
     const renderItem = ({item}) => {
         return (
             <CommonTouchableOpacity
@@ -102,8 +103,7 @@ function WalletDetailScreen({}) {
         );
     };
     return (
-        <SafeAreaView
-            style={[styles.container, {backgroundColor: theme.background4}]}>
+        <SafeAreaView   style={[styles.container, {backgroundColor: theme.background4}]}>
             <View
                 style={[styles.container, {backgroundColor: theme.background}]}>
                 <View

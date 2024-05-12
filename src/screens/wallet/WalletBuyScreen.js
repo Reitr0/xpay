@@ -23,7 +23,7 @@ export default function WalletBuyScreen({navigation, route}) {
             '&userAddress=' +
             coin.walletAddress;
         setUrl(link);
-    }, [coin.walletAddress]);
+    }, []);
     return (
         <SafeAreaView
             style={[styles.container, {backgroundColor: theme.background4}]}>

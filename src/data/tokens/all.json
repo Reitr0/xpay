@@ -5810,11 +5810,11 @@
   },
   {
     "symbol": "USDT",
-    "address": "0x55d398326f99059fF775485246999027B3197955",
+    "address": "0x40d8958fe4c2462c60d08091bb3d4c9477b2cc50",
     "chainId": 56,
     "decimals": 18,
     "name": "Binance Pegged USDT",
-    "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png",
+    "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/825.png",
     "id": "tether-pulsechain"
   },
   {
@@ -7151,7 +7151,7 @@
   },
   {
     "symbol": "USDT",
-    "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     "chainId": 137,
     "decimals": 6,
     "name": "Tether USD",

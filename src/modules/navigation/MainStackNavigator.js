@@ -34,6 +34,7 @@ import StakingDetailScreen from '@screens/staking/StakingDetailScreen';
 import StakingHistoryScreen from '@screens/staking/StakingHistoryScreen';
 import {VCoinPlatform} from '@modules/core/app/VCoinPlatform';
 import DAppsHistoryScreen from '@screens/dapps/DAppsHistoryScreen';
+import DummySwapScreen from '@screens/swap/DummySwapScreen';
 
 const Stack = createStackNavigator();
 
@@ -71,6 +72,7 @@ function MainStackNavigator() {
                 component={BtcWalletSendScreen}
             />
             <Stack.Screen name="SwapScreen" component={SwapScreen} />
+            <Stack.Screen name="DummySwapScreen" component={DummySwapScreen} />
             <Stack.Screen
                 name="SelectTokenScreen"
                 component={SelectTokenScreen}
