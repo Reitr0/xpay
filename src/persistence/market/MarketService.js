@@ -3,7 +3,7 @@ import {MarketFactory} from '@modules/core/factory/MarketFactory';
 
 export const MarketService = {
     getMarkets,
-    getMarketDetail,
+    getMarketDetail
 };
 
 async function getMarkets(limit, sparkline) {
@@ -21,7 +21,6 @@ async function getMarkets(limit, sparkline) {
         };
     }
 }
-
 async function getMarketDetail(id) {
     try {
         const market = await MarketFactory.getMarketDetail(id);

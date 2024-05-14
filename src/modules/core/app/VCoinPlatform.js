@@ -4,23 +4,13 @@ import WSSClient from '@modules/core/ws/WSClient';
 import {StakingFactory} from '@modules/core/factory/StakingFactory';
 
 export class VCoinPlatform {
-    static init() {
+    static async init() {
         try {
-            initWebSocket();
+            await initWebSocket();
             initProvider();
         } catch (e) {
             Logs.info('App: init', e);
         }
-    }
-
-    static async initStakingContract() {
-        await StakingFactory.init({
-            chain: 'ETH',
-            stakingContractAddress:
-                '0x39DCE9484dE72E199D40756cE2436C56a6106f7e',
-            tokenContractAddress: '0x1f769203D2abcb78F5A77dD15C0078C50fB13287',
-            tokenDecimals: 18,
-        });
     }
 }
 
@@ -65,9 +55,9 @@ const initProvider = () => {
     ]);
 };
 
-const initWebSocket = () => {
-    WSSClient.connect({
-        header: {token: ''},
+const initWebSocket = async () => {
+    await WSSClient.connect({
+        header: { token: '' },
         callBack: null,
     });
 };

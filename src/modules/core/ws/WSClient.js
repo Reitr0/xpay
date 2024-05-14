@@ -13,7 +13,7 @@ const connect = async ({header, callback}) => {
         brokerURL: applicationProperties.endpoints.app.wssUrl,
         connectHeaders: header,
         debug: function (str) {
-            //console.log(str);
+           //console.log(str);
         },
         reconnectDelay: 5000,
     });

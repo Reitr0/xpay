@@ -1,11 +1,11 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const UserReducer = createSlice({
     name: 'user',
     initialState: {
         registered: false,
         loggedIn: false,
-        user: {},
+        user : {}
     },
     reducers: {
         getUserSuccess(state, {payload}) {
@@ -25,6 +25,10 @@ const UserReducer = createSlice({
 // Extract the action creators object and the reducer
 const {actions, reducer} = UserReducer;
 // Extract and export each action creator by name
-export const {getUserSuccess, signOutSuccess, signInSuccess} = actions;
+export const {
+    getUserSuccess,
+    signOutSuccess,
+    signInSuccess,
+} = actions;
 // Export the reducer, either as a default or named export
 export default reducer;

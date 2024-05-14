@@ -10,7 +10,9 @@ import CommonLoading from '@components/commons/CommonLoading';
 import {WalletAction} from '@persistence/wallet/WalletAction';
 import CommonBackButton from '@components/commons/CommonBackButton';
 import {WalletService} from '@persistence/wallet/WalletService';
+import {NotifyService} from '@persistence/notify/NotifyService';
 import {applicationProperties} from '@src/application.properties';
+import {DEFAULT_WALLET} from '@persistence/wallet/WalletConstant';
 
 export default function AddAccountStep4Screen({navigation, route}) {
     const {t} = useTranslation();
@@ -80,7 +82,7 @@ export default function AddAccountStep4Screen({navigation, route}) {
         </CommonTouchableOpacity>
     );
     return (
-        <View style={[styles.container,{backgroundColor: theme.background4}]}>
+        <View style={[styles.container, {backgroundColor: theme.background4}]}>
             <SafeAreaView style={styles.container}>
                 <View
                     style={[
@@ -96,7 +98,11 @@ export default function AddAccountStep4Screen({navigation, route}) {
                         />
                     </View>
                 </View>
-                <View style={[styles.content,{backgroundColor: theme.background}]}>
+                <View
+                    style={[
+                        styles.content,
+                        {backgroundColor: theme.background},
+                    ]}>
                     <View style={styles.titleContainer}>
                         <CommonText
                             style={[styles.titleText, {color: theme.text2}]}>
@@ -150,15 +156,8 @@ export default function AddAccountStep4Screen({navigation, route}) {
                                     CommonLoading.show();
                                     dispatch(
                                         WalletAction.insert({
-                                            name: account.name,
-                                            type: account.type,
-                                            defaultChain: account.defaultChain,
                                             mnemonic: seedPhrase,
-                                            assets: account.coins,
-                                            image: account.image,
-                                            swappable: account.swappable,
-                                            dapps: account.dapps,
-                                            chain: account.chain,
+                                            ...DEFAULT_WALLET,
                                         }),
                                     ).then(async ({data}) => {
                                         CommonLoading.hide();

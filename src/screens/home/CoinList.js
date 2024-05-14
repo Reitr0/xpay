@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import usePriceHook from '@persistence/price/PriceHook';
 import Price from '@components/Price';
 import {Dimensions, StyleSheet, View} from 'react-native';
@@ -19,8 +19,9 @@ import {MarketAction} from '@persistence/market/MarketAction';
 import {useWalletList} from '@persistence/wallet/WalletHook';
 import {applicationProperties} from '@src/application.properties';
 import {ASSET_TYPE_COIN} from '@modules/core/constant/constant';
+import _ from 'lodash';
 
-function CoinList() {
+function CoinList(props) {
     const {getPriceData} = usePriceHook();
     const {t} = useTranslation();
     const navigation = useNavigation();
@@ -35,7 +36,8 @@ function CoinList() {
             dispatch(MarketAction.getMarkets(30, true));
             CommonLoading.hide();
         });
-    }, [dispatch]);
+    }, []);
+    useEffect(() => {}, []);
     const renderItem = ({item}) => {
         let chainLogo = applicationProperties.logoURI.eth;
         switch (item.chain) {
@@ -67,7 +69,6 @@ function CoinList() {
                             <CommonImage
                                 source={{uri: item.logoURI}}
                                 style={styles.itemImg}
-                                resizeMode={'contain'}
                             />
                             {item.type !== ASSET_TYPE_COIN && (
                                 <CommonImage
@@ -131,22 +132,31 @@ function CoinList() {
             data={wallets}
             showsVerticalScrollIndicator={false}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => `${item.id}${item.chain}${item.contract}`}
             onRefresh={onRefresh}
             refreshing={refreshing}
             ListFooterComponent={() => {
                 return (
-                    <CommonTouchableOpacity>
-                        <View style={styles.addTokenButton}>
-                            <CommonButton
-                                text={t('token.manage')}
-                                textStyle={{color: theme.text}}
-                                onPress={() => {
-                                    navigation.navigate('TokenScreen');
-                                }}
-                            />
-                        </View>
-                    </CommonTouchableOpacity>
+                    <View style={styles.addTokenButton}>
+                        <CommonButton
+                            text={t('token.manage')}
+                            textStyle={{color: theme.text}}
+                            onPress={() => {
+                                navigation.navigate('TokenScreen');
+                            }}
+                        />
+                        {/*<CommonButton*/}
+                        {/*    style={{*/}
+                        {/*        marginTop: 5,*/}
+                        {/*        backgroundColor: theme.background,*/}
+                        {/*    }}*/}
+                        {/*    text={t('token.add_new')}*/}
+                        {/*    textStyle={{color: theme.text2}}*/}
+                        {/*    onPress={() => {*/}
+                        {/*        navigation.navigate('AddTokenScreen');*/}
+                        {/*    }}*/}
+                        {/*/>*/}
+                    </View>
                 );
             }}
         />

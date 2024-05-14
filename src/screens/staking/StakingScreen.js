@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {RefreshControl, SafeAreaView, StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import CommonText from '@components/commons/CommonText';
@@ -11,50 +11,64 @@ import {WalletAction} from '@persistence/wallet/WalletAction';
 import {StakingAction} from '@persistence/staking/StakingAction';
 import useWalletHook from '@persistence/wallet/WalletHook';
 import {applicationProperties} from '@src/application.properties';
-import LinearGradient from 'react-native-linear-gradient';
+import _ from 'lodash';
+import Icon, {Icons} from '@components/icons/Icons';
+import ActionSheet from 'react-native-actions-sheet';
+
 const menus = [
+    {
+        id: 'flexible',
+        name: 'Flexible Staking',
+        code: 'Flexible',
+        apr: '7%',
+        desc: 'Unstake anytime',
+        data: {
+            duration: 5,
+            rate: 7,
+        },
+    },
     {
         id: 'lock-30',
         name: '30-Day Lock Staking',
         code: '30 days',
         apr: '10%',
-        desc: 'Get a 5% discount on every purchase with a 30-day lock.',
+        desc: 'Stake for 30 days',
         data: {
             duration: 30 * 24 * 60 * 60,
             rate: 10,
         },
     },
     {
-        id: 'lock-60',
-        name: '60-Day Lock Staking',
-        code: '60 days',
-        apr: '20%',
-        desc: 'Enjoy a 10% discount on every purchase after staking for 60 days.',
-        data: {
-            duration: 60 * 24 * 60 * 60,
-            rate: 20,
-        },
-    },
-    {
-        id: 'lock-90',
-        name: '90-Day Lock Staking',
-        code: '90 days',
-        apr: '30%',
-        desc: 'Stake for 90 days and get a 15% discount on all purchases.',
-        data: {
-            duration: 90 * 24 * 60 * 60,
-            rate: 30,
-        },
-    },
-    {
         id: 'lock-120',
         name: '120-Day Lock Staking',
         code: '120 days',
-        apr: '40%',
-        desc: 'Maximize your savings with a 20% discount on all purchases after a 120-day lock period.',
+        apr: '12%',
+        desc: 'Stake for 120 days',
         data: {
             duration: 120 * 24 * 60 * 60,
-            rate: 40,
+            rate: 12,
+        },
+    },
+    {
+        id: 'lock-365',
+        name: '1 Year Lock Staking',
+        code: '365 days',
+        apr: '15%',
+        desc: 'Stake for 1 Year ',
+        data: {
+            duration: 365 * 24 * 60 * 60,
+            rate: 15,
+        },
+    },
+    {
+        id: 'lock-730',
+        name: '2 Years Lock Staking',
+        code: '2 Years',
+        apr: '20%',
+        desc: 'Stake for 2 Years',
+        data: {
+            duration: 365 * 2 * 24 * 60 * 60,
+            rate: 20,
         },
     },
 ];
@@ -63,38 +77,50 @@ function StakingScreen({navigation}) {
     const dispatch = useDispatch();
     const {stakedBalance} = useSelector(state => state.StakingReducer);
     const [refreshing, setRefreshing] = useState(false);
-    const {vcoin} = useWalletHook();
+    const [chain, setChain] = useState('BSC');
+    const {getByKuKuByChain} = useWalletHook();
+    const duku = getByKuKuByChain(chain);
+    const actionSheetRef = useRef(null);
     useEffect(() => {
         (async () => {
-            dispatch(StakingAction.getStakedBalance(vcoin.walletAddress));
+            console.log(chain);
+            if (!_.isNil(duku?.walletAddress)) {
+                dispatch(
+                    StakingAction.getStakedBalance(chain, duku?.walletAddress),
+                );
+                dispatch(WalletAction.balance());
+            }
         })();
-    }, []);
+    }, [chain]);
 
-    const onRefresh = useCallback(async () => {
+    const onRefresh = () => {
         setRefreshing(true);
-        dispatch(StakingAction.getStakedBalance(vcoin.walletAddress)).then(
-            () => {
-                setRefreshing(false);
-            },
-        );
+        dispatch(
+            StakingAction.getStakedBalance(chain, duku?.walletAddress),
+        ).then(() => {
+            setRefreshing(false);
+        });
         dispatch(WalletAction.balance());
-    }, []);
+    };
     const renderItem = ({item}) => {
         return (
             <CommonTouchableOpacity
                 onPress={() => {
-                    navigation.navigate('StakingDetailScreen', {item});
+                    navigation.navigate('StakingDetailScreen', {
+                        item: {...item, chain},
+                    });
                 }}
                 style={[styles.itemContainer]}>
                 <View style={styles.imageContainer}>
                     <CommonImage
-                        source={{uri: applicationProperties.logoURI.app}}
+                        source={{uri: applicationProperties.logoURI.duku}}
                         style={{
                             width: 32,
                             height: 32,
                             borderWidth: 2,
                             borderColor: theme.bg0,
                             borderRadius: 100,
+                            backgroundColor: theme.bg6,
                         }}
                     />
                 </View>
@@ -131,16 +157,10 @@ function StakingScreen({navigation}) {
                             {backgroundColor: theme.background2},
                         ]}>
                         <View style={styles.userContainerTop}>
-                            <View
-                                style={[
-                                    styles.userImgContainer,
-                                    {
-                                        borderRadius: 100,
-                                    },
-                                ]}>
+                            <View style={[styles.userImgContainer]}>
                                 <CommonImage
                                     source={{
-                                        uri: applicationProperties.logoURI.app,
+                                        uri: applicationProperties.logoURI.duku,
                                     }}
                                     style={styles.userImg}
                                 />
@@ -151,9 +171,24 @@ function StakingScreen({navigation}) {
                                 </CommonText>
                                 <Balance
                                     style={[styles.userTitle]}
-                                    symbol={' Azure'}>
-                                    {vcoin?.balance}
+                                    symbol={duku?.symbol}>
+                                    {duku?.balance}
                                 </Balance>
+                            </View>
+                            <View style={styles.networkContainer}>
+                                <CommonTouchableOpacity
+                                    onPress={() => {
+                                        actionSheetRef.current?.show();
+                                    }}
+                                    style={styles.networkButton}>
+                                    <CommonText>{chain} Network</CommonText>
+                                    <Icon
+                                        type={Icons.Feather}
+                                        size={18}
+                                        name={'chevron-down'}
+                                        color={'white'}
+                                    />
+                                </CommonTouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.userContainerBottom}>
@@ -161,33 +196,22 @@ function StakingScreen({navigation}) {
                                 Staked{': '}
                                 <Balance
                                     style={styles.userTitle}
-                                    symbol={' Azure'}>
+                                    symbol={duku?.symbol}>
                                     {stakedBalance}
                                 </Balance>
                             </CommonText>
                             <CommonTouchableOpacity
                                 onPress={() => {
-                                    navigation.navigate('StakingHistoryScreen');
+                                    navigation.navigate(
+                                        'StakingHistoryScreen',
+                                        {item: {chain: chain}},
+                                    );
                                 }}>
                                 <CommonText style={styles.label}>
                                     History
                                 </CommonText>
                             </CommonTouchableOpacity>
                         </View>
-                    </View>
-                    <View style={styles.promotionContainer}>
-                        <LinearGradient
-                            start={{x: 0, y: 0}}
-                            end={{x: 1, y: 1}}
-                            colors={theme.gradient1}
-                            style={styles.promotion}>
-                            <CommonText
-                                style={{
-                                    fontWeight: 'bold',
-                                }}>
-                                Using AZURE for a 20% discount on purchases
-                            </CommonText>
-                        </LinearGradient>
                     </View>
                     <View style={styles.menuContainer}>
                         <CommonFlatList
@@ -203,6 +227,46 @@ function StakingScreen({navigation}) {
                         />
                     </View>
                 </View>
+                <ActionSheet
+                    ref={actionSheetRef}
+                    gestureEnabled={true}
+                    containerStyle={{
+                        backgroundColor: theme.background2,
+                    }}
+                    headerAlwaysVisible>
+                    <View style={styles.networkSelectionContainer}>
+                        <CommonTouchableOpacity
+                            onPress={() => {
+                                setChain('BSC');
+                            }}
+                            style={styles.networkSelectionItem}>
+                            <CommonText>BSC Network</CommonText>
+                            {chain === 'BSC' && (
+                                <Icon
+                                    name="check"
+                                    size={20}
+                                    type={Icons.AntDesign}
+                                    color={'white'}
+                                />
+                            )}
+                        </CommonTouchableOpacity>
+                        <CommonTouchableOpacity
+                            onPress={() => {
+                                setChain('ETH');
+                            }}
+                            style={styles.networkSelectionItem}>
+                            <CommonText>ETH Network</CommonText>
+                            {chain === 'ETH' && (
+                                <Icon
+                                    name="check"
+                                    size={20}
+                                    type={Icons.AntDesign}
+                                    color={'white'}
+                                />
+                            )}
+                        </CommonTouchableOpacity>
+                    </View>
+                </ActionSheet>
             </SafeAreaView>
         </View>
     );
@@ -296,6 +360,32 @@ const styles = StyleSheet.create({
     },
     apr: {
         width: 50,
+    },
+    networkContainer: {
+        width: 120,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    networkButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        padding: 5,
+        backgroundColor: '#3cc3d7',
+        borderRadius: 5,
+        flexDirection: 'row',
+    },
+    networkSelectionContainer: {
+        width: '100%',
+        height: 120,
+    },
+    networkSelectionItem: {
+        height: '50%',
+        width: '100%',
+        padding: 5,
+        paddingLeft: 10,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
     },
 });
 export default StakingScreen;

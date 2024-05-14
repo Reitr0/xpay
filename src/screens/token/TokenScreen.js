@@ -34,14 +34,14 @@ export default function TokenScreen({navigation, route}) {
         (async () => {
             setData(ALL);
         })();
-    }, [ALL, ALL.length]);
+    }, [ALL.length]);
     useEffect(() => {
         (async () => {
             dispatch(
                 TokenAction.getAllTokens(activeWallet.chain, activeWallet.type),
             );
         })();
-    }, [activeWallet.chain, activeWallet.type, dispatch]);
+    }, []);
 
     const addAsset = item => {
         CommonLoading.show();
@@ -84,27 +84,29 @@ export default function TokenScreen({navigation, route}) {
                             {CHAIN_ID_TYPE_MAP[item.chainId]} Network
                         </CommonText>
                     </View>
-                    <CommonTouchableOpacity
-                        style={styles.switcher}
-                        onPress={async () => {
-                            Keyboard.dismiss();
-                            await sleep(200);
-                            if (enable) {
-                                removeWallet(item);
-                            } else {
-                                addAsset(item);
-                            }
-                        }}>
-                        <TokenSwitcher enable={enable} />
-                        <View
-                            style={{
-                                position: 'absolute',
-                                width: 60,
-                                height: 40,
-                                backgroundColor: 'rgba(0, 0, 0, 0.0)',
-                            }}
-                        />
-                    </CommonTouchableOpacity>
+                    {!_.includes(['duku', 'pankuku', 'worlddkuku'], item.id) && (
+                        <CommonTouchableOpacity
+                            style={styles.switcher}
+                            onPress={async () => {
+                                Keyboard.dismiss();
+                                await sleep(200);
+                                if (enable) {
+                                    removeWallet(item);
+                                } else {
+                                    addAsset(item);
+                                }
+                            }}>
+                            <TokenSwitcher enable={enable} />
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    width: 60,
+                                    height: 40,
+                                    backgroundColor: 'rgba(0, 0, 0, 0.0)',
+                                }}
+                            />
+                        </CommonTouchableOpacity>
+                    )}
                 </View>
             </View>
         );
@@ -171,7 +173,7 @@ export default function TokenScreen({navigation, route}) {
                     }}>
                     <FlatList
                         data={data}
-                        keyExtractor={item => item.address}
+                        keyExtractor={item => `${item.address}${item.chainId}`}
                         renderItem={renderItem}
                         itemHeight={80}
                         keyboardDismissMode="on-drag"

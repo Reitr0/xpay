@@ -90,6 +90,7 @@ export class TronProvider implements Provider {
             'wallet/getaccountresource',
             {address: address},
         );
+        console.log(data);
         return {success: true, data: {...defaultData, ...data}};
     }
 

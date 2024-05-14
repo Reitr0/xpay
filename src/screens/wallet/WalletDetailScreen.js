@@ -48,6 +48,7 @@ function WalletDetailScreen({route}) {
             ...coin,
             walletAddress: activeWallet.activeAsset.walletAddress,
         });
+        console.log(data);
         setTransactions(data);
     };
     const renderItem = ({item}) => {
@@ -103,7 +104,8 @@ function WalletDetailScreen({route}) {
         );
     };
     return (
-        <SafeAreaView   style={[styles.container, {backgroundColor: theme.background4}]}>
+        <SafeAreaView
+            style={[styles.container, {backgroundColor: theme.background4}]}>
             <View
                 style={[styles.container, {backgroundColor: theme.background}]}>
                 <View

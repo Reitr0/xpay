@@ -39,9 +39,7 @@ export default function WalletSendScreen({navigation}) {
     const {theme} = useSelector(state => state.ThemeReducer);
     const {fee: feeData} = useSelector(state => state.FeeReducer);
     const [fee] = useState(feeData[activeWallet.activeAsset.chain]);
-    const [destination, setDestination] = useState(
-        '0x123114883C9dd6E4a7B3c4c16089275FbfFc5678',
-    );
+    const [destination, setDestination] = useState('');
     const [value, setValue] = useState('');
     const [maxAmount, setMaxAmount] = useState(0);
     const [toFiat, setToFiat] = useState(0);

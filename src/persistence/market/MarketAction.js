@@ -1,5 +1,6 @@
-import {MarketService} from '@persistence/market/MarketService';
 import {getMarketsSuccess} from '@persistence/market/MarketReducer';
+import {MarketService} from '@persistence/market/MarketService';
+import {sleep} from '@src/utils/ThreadUtil';
 
 export const MarketAction = {
     getMarkets,
@@ -7,13 +8,15 @@ export const MarketAction = {
 
 function getMarkets(limit, sparkline) {
     return async dispatch => {
+        var result = [];
         const {success, data} = await MarketService.getMarkets(
             limit,
             sparkline,
         );
-        if (success) {
-            dispatch(getMarketsSuccess(data));
+        if (success === true) {
+            result = [...data];
+            dispatch(getMarketsSuccess(result));
         }
-        return {success, data};
+        return {success, result};
     };
 }

@@ -7,24 +7,21 @@ const TokenReducer = createSlice({
         ETH: [],
         BSC: [],
         POLYGON: [],
-        TRON: [],
     },
     reducers: {
         getAllTokensSuccess(state, {payload}) {
-            const {ALL, ETH, BSC, POLYGON, TRON} = payload;
+            const {ALL, ETH, BSC, POLYGON} = payload;
             state.ALL = ALL;
             state.ETH = ETH;
             state.BSC = BSC;
             state.POLYGON = POLYGON;
-            state.TRON = TRON;
         },
         addTokenSuccess(state, {payload}) {
-            const {ALL, ETH, BSC, POLYGON, TRON} = payload;
+            const {ALL, ETH, BSC, POLYGON} = payload;
             state.ALL = [...state.ALL, ...ALL];
             state.ETH = [...state.ETH, ...ETH];
             state.BSC = [...state.BSC, ...BSC];
             state.POLYGON = [...state.POLYGON, ...POLYGON];
-            state.TRON = [...state.TRON, ...TRON];
         },
     },
 });

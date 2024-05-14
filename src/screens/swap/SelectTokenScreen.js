@@ -27,7 +27,7 @@ export default function SelectTokenScreen({navigation, route}) {
             setData(filteredTokens);
             setTokens(filteredTokens);
         })();
-    }, [currentToken, platform, token]);
+    }, []);
 
     const renderItem = ({item}) => {
         let img = {
@@ -117,6 +117,7 @@ export default function SelectTokenScreen({navigation, route}) {
                 <View style={{flex: 1}}>
                     <CommonFlatList
                         data={data}
+                        keyExtractor={item => `${item.address}${item.chainId}`}
                         renderItem={renderItem}
                         itemHeight={80}
                         keyboardDismissMode="on-drag"

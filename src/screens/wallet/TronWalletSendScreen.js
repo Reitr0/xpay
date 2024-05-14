@@ -153,6 +153,7 @@ export default function TronWalletSendScreen({navigation}) {
     const executeTX = async () => {
         actionSheetRef.current?.hide();
         try {
+            console.log(activeWallet.activeAsset.chain)
             const tx = {
                 to: destination,
                 value: value,
@@ -165,6 +166,7 @@ export default function TronWalletSendScreen({navigation}) {
             if (activeWallet.activeAsset.type === ASSET_TYPE_TOKEN) {
                 tx.tokenContractAddress = activeWallet.activeAsset.contract;
             }
+            console.log(activeWallet.activeAsset.chain)
             const {success, data} = await WalletFactory.sendTransaction(
                 activeWallet.activeAsset.chain,
                 tx,
@@ -491,6 +493,8 @@ export default function TronWalletSendScreen({navigation}) {
                                 </View>
                                 <View style={styles.confirmTxButton}>
                                     <CommonButton
+                                      textStyle={{color: 'black'}}
+                                        style={{backgroundColor: 'white'}}
                                         text={t('tx.send')}
                                         onPress={async () => {
                                             await executeTX();

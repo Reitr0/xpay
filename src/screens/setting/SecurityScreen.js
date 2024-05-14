@@ -9,7 +9,7 @@ import Icon, {Icons} from '@components/icons/Icons';
 import ActionSheet from 'react-native-actions-sheet';
 import {AppLockAction} from '@persistence/applock/AppLockAction';
 
-export default function SecurityScreen({navigation}) {
+export default function SecurityScreen({navigation, route}) {
     const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
     const dispatch = useDispatch();
@@ -45,7 +45,7 @@ export default function SecurityScreen({navigation}) {
     }, []);
 
     return (
-        <View style={[styles.container, {backgroundColor: theme.background4}]}>
+        <View style={[styles.container,{backgroundColor: theme.background4}]}>
             <SafeAreaView style={styles.container}>
                 <View
                     style={[
@@ -66,11 +66,7 @@ export default function SecurityScreen({navigation}) {
                         </CommonText>
                     </View>
                 </View>
-                <View
-                    style={[
-                        styles.content,
-                        {backgroundColor: theme.background},
-                    ]}>
+                <View style={[styles.content,{backgroundColor: theme.background}]}>
                     <CommonTouchableOpacity
                         style={[
                             styles.item,
@@ -440,7 +436,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     content: {
-        flex: 1,
+      flex: 1
     },
     gapBackground: {
         height: 50,

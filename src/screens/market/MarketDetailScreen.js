@@ -88,10 +88,7 @@ export default function MarketDetailScreen({navigation, route}) {
                                     <View
                                         style={[
                                             styles.coinInfoPercentageBg,
-                                            {
-                                                backgroundColor:
-                                                    theme.background3,
-                                            },
+
                                         ]}>
                                         <NumberFormatted
                                             decimals={2}
@@ -344,7 +341,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     coinInfoPercentageBg: {
-        backgroundColor: 'rgba(126,126,126,0.5)',
+        backgroundColor: 'rgba(220,220,220,0.5)',
         borderRadius: 10,
         width: 60,
         justifyContent: 'center',

@@ -108,13 +108,22 @@
     "id": "winklink-bsc"
   },
   {
-    "symbol": "USDT",
-    "address": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+  "symbol": "USDT",
+  "address": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+  "chainId": 999,
+  "decimals": 6,
+  "name": "Tether USD",
+  "logoURI": "https://static.tronscan.org/production/logo/usdtlogo.png",
+  "id": "tether-pulsechain"
+},
+  {
+    "symbol": "XUSDT",
+    "address": "TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL",
     "chainId": 999,
-    "decimals": 6,
-    "name": "Tether USD",
-    "logoURI": "https://static.tronscan.org/production/logo/usdtlogo.png",
-    "id": "tether-pulsechain"
+    "decimals": 18,
+    "name": "TetAC-X-USD (XUSDT)",
+    "logoURI": "https://static.tronscan.org/production/upload/logo/new/TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL.png?t=1715415057068",
+    "id": "tetac-x-usd"
   },
   {
     "symbol": "USDJ",

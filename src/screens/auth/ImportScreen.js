@@ -21,18 +21,23 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import CommonLoading from '@components/commons/CommonLoading';
 import {WalletAction} from '@persistence/wallet/WalletAction';
-import {DEFAULT_WALLET} from '@persistence/wallet/WalletConstant';
+import {applicationProperties} from '@src/application.properties';
+import {
+    DEFAULT_WALLET,
+    WALLET_LIST,
+    WALLET_TYPE,
+} from '@persistence/wallet/WalletConstant';
 import {UserAction} from '@persistence/user/UserAction';
 import CommonAlert from '@components/commons/CommonAlert';
+import { FeeAction } from "@persistence/fee/FeeAction";
 
-export default function ImportScreen({navigation}) {
+export default function ImportScreen({navigation, route}) {
     const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
     const [name, setName] = useState('');
     const [mnemonic, setMnemonic] = useState('');
     const actionCamera = useRef(null);
     const dispatch = useDispatch();
-
     useEffect(() => {}, []);
     const onSuccess = e => {
         setMnemonic(e.data);
@@ -161,7 +166,7 @@ export default function ImportScreen({navigation}) {
                         textStyle={{color: theme.text}}
                         onPress={async () => {
                             const validMnemonic =
-                                bip39.validateMnemonic(mnemonic);
+                                bip39.validateMnemonic(mnemonic.trim());
                             if (!validMnemonic) {
                                 CommonAlert.show({
                                     title: t('alert.error'),
@@ -178,6 +183,9 @@ export default function ImportScreen({navigation}) {
                                 }),
                             ).then(async ({data}) => {
                                 dispatch(UserAction.signIn()).then(() => {
+                                    dispatch(
+                                      FeeAction.getFee(),
+                                    );
                                     CommonLoading.hide();
                                 });
                             });

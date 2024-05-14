@@ -100,7 +100,7 @@ export default function SelectNetworkScreen({navigation, route}) {
                         />
                     </View>
                 </View>
-                <View style={{flex: 1, backgroundColor: theme.background}}>
+                <View style={{flex: 1, backgroundColor : theme.background}}>
                     <CommonFlatList
                         data={data}
                         renderItem={renderItem}

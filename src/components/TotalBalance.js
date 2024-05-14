@@ -11,39 +11,12 @@ import CommonTouchableOpacity from '@components/commons/CommonTouchableOpacity';
 
 function TotalBalance({style, id, decimals = 5, ...rest}) {
     const {activeWallet} = useSelector(state => state.WalletReducer);
-    const [hide, setHide] = useState(false);
+    const [hide, setHide] = useState(true);
     useEffect(() => {}, []);
     return (
-        <>
-            {!hide && (
-                <Price
-                    onPress={() => {
-                        setHide(true);
-                    }}
-                    style={style}
-                    decimals={decimals}
-                    {...rest}>
-                    {activeWallet.totalBalance}
-                </Price>
-            )}
-            {hide && (
-                <CommonTouchableOpacity
-                    onPress={() => {
-                        setHide(false);
-                    }}
-                    style={styles.container}>
-                    <CommonText style={style}>*****</CommonText>
-                </CommonTouchableOpacity>
-            )}
-        </>
+        <Price style={style} decimals={decimals} {...rest}>
+            {activeWallet.totalBalance}
+        </Price>
     );
 }
-const styles = StyleSheet.create({
-    container: {
-        height: 30,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-});
 export default TotalBalance;

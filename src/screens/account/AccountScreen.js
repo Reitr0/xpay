@@ -22,6 +22,7 @@ export default function AccountScreen({navigation}) {
         (async () => {})();
     }, []);
     const renderItem = ({item}) => {
+        console.log(item);
         return (
             <CommonTouchableOpacity
                 style={[
@@ -29,8 +30,9 @@ export default function AccountScreen({navigation}) {
                     {borderBottomColor: theme.border, borderBottomWidth: 0.5},
                 ]}
                 onPress={() => {
-                    navigation.navigate('AccountDetailScreen', {
-                        account: item,
+                    CommonLoading.show();
+                    dispatch(WalletAction.setActiveWallet(item)).then(() => {
+                        CommonLoading.hide();
                     });
                 }}
                 key={item.id.toString()}>
@@ -60,15 +62,19 @@ export default function AccountScreen({navigation}) {
                         </CommonText>
                     </View>
                 </View>
-                <View
+                <CommonTouchableOpacity
                     style={styles.leftItemContainer}
-                    >
+                    onPress={() => {
+                        navigation.navigate('AccountDetailScreen', {
+                            account: item,
+                        });
+                    }}>
                     <Icon
                         type={Icons.Feather}
                         size={18}
                         name={'alert-circle'}
                     />
-                </View>
+                </CommonTouchableOpacity>
             </CommonTouchableOpacity>
         );
     };
@@ -89,7 +95,20 @@ export default function AccountScreen({navigation}) {
                         {t('setting.wallets')}
                     </CommonText>
                 </View>
-
+                <CommonTouchableOpacity
+                    style={styles.rightHeader}
+                    onPress={() => {
+                        navigation.navigate('AddAccountStep2Screen', {
+                            account: DEFAULT_WALLET,
+                        });
+                    }}>
+                    <Icon
+                        type={Icons.Feather}
+                        size={18}
+                        name={'plus'}
+                        color={theme.text}
+                    />
+                </CommonTouchableOpacity>
             </View>
             <View style={[styles.section, {backgroundColor: theme.background}]}>
                 <CommonFlatList

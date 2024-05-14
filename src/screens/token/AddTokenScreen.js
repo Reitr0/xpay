@@ -16,7 +16,7 @@ import CommonAlert from '@components/commons/CommonAlert';
 import {TokenAction} from '@persistence/token/TokenAction';
 import {TokenService} from '@persistence/token/TokenService';
 
-export default function AddTokenScreen({navigation}) {
+export default function AddTokenScreen({navigation, route}) {
     const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
     const dispatch = useDispatch();
@@ -302,6 +302,11 @@ export default function AddTokenScreen({navigation}) {
                                         applicationProperties.logoURI.noImage;
                                 } else if (network.chain === 'POLYGON') {
                                     chainId = 137;
+                                    logo =
+                                        token.logo ||
+                                        applicationProperties.logoURI.noImage;
+                                } else if (network.chain === 'TRON') {
+                                    chainId = 999;
                                     logo =
                                         token.logo ||
                                         applicationProperties.logoURI.noImage;

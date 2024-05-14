@@ -57,6 +57,7 @@ export default function DAppsDetailScreen({navigation, route}) {
             web3wallet.on('session_request', onSessionRequest);
             web3wallet.on('session_delete', onSessionDelete);
         })();
+        CommonLoading.hide();
     }, []);
     useEffect(() => {
         (async () => {
@@ -175,6 +176,7 @@ export default function DAppsDetailScreen({navigation, route}) {
 
     const onSessionProposal = useCallback(proposal => {
         setPairingProposal(proposal);
+        console.log(JSON.stringify(proposal));
         const {params} = proposal;
         const {requiredNamespaces: mainNamespaces, optionalNamespaces} = params;
         const currentRequiredNamespaces = _.isEmpty(mainNamespaces)
@@ -184,6 +186,8 @@ export default function DAppsDetailScreen({navigation, route}) {
         approvalSessionModal?.current.show();
     }, []);
     const onSessionRequest = useCallback(async requestEvent => {
+        console.log("onSessionRequest");
+        console.log(requestEvent);
         const {topic, params} = requestEvent;
         const {request} = params;
         const requestSessionData =
@@ -217,62 +221,69 @@ export default function DAppsDetailScreen({navigation, route}) {
         dispatch(WalletConnectAction.remove(uri));
     };
     async function handleAccept() {
-        const {id, params} = pairingProposal;
-        const {requiredNamespaces: mainNamespaces, optionalNamespaces} = params;
-        const currentRequiredNamespaces = _.isEmpty(mainNamespaces)
-            ? optionalNamespaces
-            : mainNamespaces;
-        let chainId = currentRequiredNamespaces.eip155?.chains[0];
-        if (!_.isNil(chainId)) {
-            const {relays} = params;
-            chainId = chainId.replace('eip155:', '');
-            const wallet = await WalletFactory.getWallet(
-                CHAIN_ID_TYPE_MAP[chainId],
-            );
-            if (_.isNil(wallet)) {
-                CommonAlert.show({
-                    title: t('alert.error'),
-                    message: 'Network does not support.',
-                    type: 'error',
-                });
-                setLoading(false);
-                CommonLoading.hide();
-                return;
-            }
-            if (pairingProposal && wallet) {
-                CommonLoading.show();
-                const namespaces = {};
-                setActiveChain(CHAIN_ID_TYPE_MAP[chainId]);
-                Object.keys(currentRequiredNamespaces).forEach(key => {
-                    const accounts: string[] = [];
-                    currentRequiredNamespaces[key].chains.map(chain => {
-                        [wallet.data.walletAddress].map(acc =>
-                            accounts.push(`${chain}:${acc}`),
-                        );
+        try{
+            const {id, params} = pairingProposal;
+            const {requiredNamespaces: mainNamespaces, optionalNamespaces} = params;
+            const currentRequiredNamespaces = _.isEmpty(mainNamespaces)
+                ? optionalNamespaces
+                : mainNamespaces;
+            let chainId = 999;
+            console.log(chainId);
+            if (!_.isNil(chainId)) {
+                const {relays} = params;
+                console.log(WalletFactory.wallets);
+                const wallet = await WalletFactory.getWallet(
+                    CHAIN_ID_TYPE_MAP[chainId],
+                );
+                console.log(wallet);
+                if (_.isNil(wallet)) {
+                    CommonAlert.show({
+                        title: t('alert.error'),
+                        message: 'Network does not support.',
+                        type: 'error',
                     });
-                    namespaces[key] = {
-                        accounts,
-                        methods: currentRequiredNamespaces[key].methods,
-                        events: currentRequiredNamespaces[key].events,
+                    setLoading(false);
+                    CommonLoading.hide();
+                    return;
+                }
+                if (pairingProposal && wallet) {
+                    CommonLoading.show();
+                    const namespaces = {};
+                    setActiveChain(CHAIN_ID_TYPE_MAP[chainId]);
+                    Object.keys(currentRequiredNamespaces).forEach(key => {
+                        const accounts: string[] = [];
+                        currentRequiredNamespaces[key].chains.map(chain => {
+                            [wallet.data.walletAddress].map(acc =>
+                                accounts.push(`${chain}:${acc}`),
+                            );
+                        });
+                        namespaces[key] = {
+                            accounts,
+                            methods: currentRequiredNamespaces[key].methods,
+                            events: currentRequiredNamespaces[key].events,
+                        };
+                    });
+                    const approveSession = {
+                        id,
+                        relayProtocol: relays[0].protocol,
+                        namespaces,
                     };
-                });
-                const approveSession = {
-                    id,
-                    relayProtocol: relays[0].protocol,
-                    namespaces,
-                };
-                await web3wallet.approveSession(approveSession);
-                const newSite = {};
-                newSite[uri] = {
-                    chain: CHAIN_ID_TYPE_MAP[chainId],
-                    approveSession,
-                    pairingProposal,
-                };
-                dispatch(WalletConnectAction.add(newSite));
-                CommonLoading.hide();
+                    await web3wallet.approveSession(approveSession);
+                    const newSite = {};
+                    newSite[uri] = {
+                        chain: CHAIN_ID_TYPE_MAP[chainId],
+                        approveSession,
+                        pairingProposal,
+                    };
+                    dispatch(WalletConnectAction.add(newSite));
+                    CommonLoading.hide();
+                }
+                approvalSessionModal?.current.hide();
             }
-            approvalSessionModal?.current.hide();
+        }catch (e) {
+            console.log(e);
         }
+
     }
 
     async function handleDecline() {
@@ -323,6 +334,7 @@ export default function DAppsDetailScreen({navigation, route}) {
         return true;
     };
     async function onApproveRequest() {
+        console.log(requestEventData);
         if (requestEventData) {
             CommonLoading.show();
             try {
@@ -509,7 +521,26 @@ export default function DAppsDetailScreen({navigation, route}) {
                         {pairingProposal?.params?.proposer?.metadata.url}
                     </CommonText>
                 </View>
-                <View style={[styles.contentContainer]} />
+                <View style={[styles.contentContainer]}>
+                    {requestEventData && (
+                        <CommonText>
+                            wants to{' '}
+                            {requestEventData?.params?.request?.method ===
+                            'personal_sign'
+                                ? 'sign a message as below: '
+                                : 'send a transaction as below'}
+                        </CommonText>
+                    )}
+                    {requestEventData && (
+                        <CommonText>
+                            {JSON.stringify(
+                                getSignParamsMessage(
+                                    requestEventData?.params?.request?.params,
+                                ),
+                            )}
+                        </CommonText>
+                    )}
+                </View>
                 <View style={[styles.buttonContainer]}>
                     <View style={styles.haftButton}>
                         <CommonButton

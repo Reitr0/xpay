@@ -26,6 +26,9 @@ import PreferencesScreen from '@screens/setting/PreferencesScreen';
 import LanguageScreen from '@screens/setting/LanguageScreen';
 import CurrencyScreen from '@screens/setting/CurrencyScreen';
 import WalletBuyScreen from '@screens/wallet/WalletBuyScreen';
+import PriceAlertScreen from '@screens/pricealert/PriceAlertScreen';
+import AddPriceAlertScreen from '@screens/pricealert/AddPriceAlertScreen';
+import NotificationScreen from '@screens/notification/NotificationScreen';
 import TronWalletSendScreen from '@screens/wallet/TronWalletSendScreen';
 import AddTokenScreen from '@screens/token/AddTokenScreen';
 import SelectNetworkScreen from '@screens/token/SelectNetworkScreen';
@@ -34,14 +37,13 @@ import StakingDetailScreen from '@screens/staking/StakingDetailScreen';
 import StakingHistoryScreen from '@screens/staking/StakingHistoryScreen';
 import {VCoinPlatform} from '@modules/core/app/VCoinPlatform';
 import DAppsHistoryScreen from '@screens/dapps/DAppsHistoryScreen';
-import DummySwapScreen from '@screens/swap/DummySwapScreen';
 
 const Stack = createStackNavigator();
 
 function MainStackNavigator() {
     useEffect(() => {
         (async () => {
-            await VCoinPlatform.initStakingContract();
+
         })();
     }, []);
     return (
@@ -72,7 +74,6 @@ function MainStackNavigator() {
                 component={BtcWalletSendScreen}
             />
             <Stack.Screen name="SwapScreen" component={SwapScreen} />
-            <Stack.Screen name="DummySwapScreen" component={DummySwapScreen} />
             <Stack.Screen
                 name="SelectTokenScreen"
                 component={SelectTokenScreen}
@@ -122,6 +123,18 @@ function MainStackNavigator() {
             <Stack.Screen name="LanguageScreen" component={LanguageScreen} />
             <Stack.Screen name="CurrencyScreen" component={CurrencyScreen} />
             <Stack.Screen name="WalletBuyScreen" component={WalletBuyScreen} />
+            <Stack.Screen
+                name="PriceAlertScreen"
+                component={PriceAlertScreen}
+            />
+            <Stack.Screen
+                name="AddPriceAlertScreen"
+                component={AddPriceAlertScreen}
+            />
+            <Stack.Screen
+                name="NotificationScreen"
+                component={NotificationScreen}
+            />
             <Stack.Screen
                 name="TronWalletSendScreen"
                 component={TronWalletSendScreen}

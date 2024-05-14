@@ -17,6 +17,8 @@ import CommonLoading from '@components/commons/CommonLoading';
 import {WalletAction} from '@persistence/wallet/WalletAction';
 import CommonAlert from '@components/commons/CommonAlert';
 import {WalletService} from '@persistence/wallet/WalletService';
+import {NotifyService} from '@persistence/notify/NotifyService';
+import {DEFAULT_WALLET} from '@persistence/wallet/WalletConstant';
 
 export default function AddAccountStep5Screen({navigation, route}) {
     const {account} = route.params;
@@ -67,7 +69,11 @@ export default function AddAccountStep5Screen({navigation, route}) {
                         </CommonTouchableOpacity>
                     </View>
                 </View>
-                <View style={[styles.content,{backgroundColor: theme.background}]}>
+                <View
+                    style={[
+                        styles.content,
+                        {backgroundColor: theme.background},
+                    ]}>
                     <View style={styles.row}>
                         <View
                             style={[
@@ -124,15 +130,8 @@ export default function AddAccountStep5Screen({navigation, route}) {
                                 CommonLoading.show();
                                 dispatch(
                                     WalletAction.insert({
-                                        name: account.name,
-                                        type: account.type,
-                                        defaultChain: account.defaultChain,
                                         mnemonic: mnemonic,
-                                        assets: account.coins,
-                                        image: account.image,
-                                        swappable: account.swappable,
-                                        dapps: account.dapps,
-                                        chain: account.chain,
+                                        ...DEFAULT_WALLET,
                                     }),
                                 ).then(async ({data}) => {
                                     CommonLoading.hide();
@@ -208,7 +207,7 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         width: '100%',
-      paddingTop: 10
+        paddingTop: 10,
     },
     row: {
         paddingHorizontal: 10,

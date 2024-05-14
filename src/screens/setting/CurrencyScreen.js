@@ -11,7 +11,7 @@ import Icon, {Icons} from '@components/icons/Icons';
 import {CurrencyAction} from '@persistence/currency/CurrencyAction';
 import CommonLoading from '@components/commons/CommonLoading';
 
-export default function CurrencyScreen({navigation}) {
+export default function CurrencyScreen({navigation, route}) {
     const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
     const {currency} = useSelector(state => state.CurrencyReducer);
@@ -50,7 +50,7 @@ export default function CurrencyScreen({navigation}) {
         );
     };
     return (
-        <View style={[styles.container, {backgroundColor: theme.background4}]}>
+        <View style={[styles.container,{backgroundColor: theme.background4}]}>
             <SafeAreaView style={styles.container}>
                 <View
                     style={[
@@ -71,11 +71,7 @@ export default function CurrencyScreen({navigation}) {
                         </CommonText>
                     </View>
                 </View>
-                <View
-                    style={[
-                        styles.content,
-                        {backgroundColor: theme.background},
-                    ]}>
+                <View style={[styles.content,{backgroundColor: theme.background}]}>
                     <CommonFlatList
                         data={applicationProperties.currencies}
                         renderItem={renderItem}

@@ -2,7 +2,6 @@ import HomeScreen from '@screens/home/HomeScreen';
 import Icon, {Icons} from '@components/icons/Icons';
 import {AppState, Platform} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useTranslation} from 'react-i18next';
 import SettingScreen from '@screens/setting/SettingScreen';
 import MarketScreen from '@screens/market/MarketScreen';
 import DAppsScreen from '@screens/dapps/DAppsScreen';
@@ -11,12 +10,11 @@ import {useEffect} from 'react';
 import SwapScreen from '@screens/swap/SwapScreen';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import StakingScreen from '@screens/staking/StakingScreen';
-import DummySwapScreen from '@screens/swap/DummySwapScreen';
+import NftScreen from '@screens/nft/NftScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
 function BottomTabBarNavigator() {
-    const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
     const {appLock} = useSelector(state => state.AppLockReducer);
     let timeOut = appLock.autoLock;
@@ -45,7 +43,6 @@ function BottomTabBarNavigator() {
         }
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleAppStateChange = nextAppState => {
         lockState(nextAppState);
     };
@@ -57,7 +54,7 @@ function BottomTabBarNavigator() {
         return () => {
             appStateListener.remove();
         };
-    }, [timeOut, lock, handleAppStateChange]);
+    }, [timeOut, lock]);
     return (
         <Tab.Navigator
             tabBarPosition={'bottom'}
@@ -74,10 +71,10 @@ function BottomTabBarNavigator() {
                 name="Home"
                 component={HomeScreen}
                 options={{
-                    tabBarLabelStyle: {fontSize: 9},
+                    tabBarLabelStyle: {fontSize: 8},
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
-                    tabBarLabel: t('Wallet'),
+                    tabBarLabel: 'Wallet',
                     tabBarIcon: ({color, size}) => (
                         <Icon
                             name="wallet-outline"
@@ -94,7 +91,7 @@ function BottomTabBarNavigator() {
                 component={MarketScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 8},
-                    tabBarLabel: t('menu_market'),
+                    tabBarLabel: 'Market',
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (
@@ -107,48 +104,12 @@ function BottomTabBarNavigator() {
                     ),
                 }}
             />
-            {/*<Tab.Screen*/}
-            {/*    name="StakingScreen"*/}
-            {/*    component={StakingScreen}*/}
-            {/*    options={{*/}
-            {/*        tabBarLabelStyle: {fontSize: 9},*/}
-            {/*        tabBarLabel: 'STAKE',*/}
-            {/*        tabBarInactiveTintColor: theme.tabBarInactiveTintColor,*/}
-            {/*        tabBarActiveTintColor: theme.button,*/}
-            {/*        tabBarIcon: ({color, size}) => (*/}
-            {/*            <Icon*/}
-            {/*                name="water-outline"*/}
-            {/*                size={size}*/}
-            {/*                type={Icons.Ionicons}*/}
-            {/*                color={color}*/}
-            {/*            />*/}
-            {/*        ),*/}
-            {/*    }}*/}
-            {/*/>*/}
-            {/* <Tab.Screen
+            <Tab.Screen
                 name="SwapScreen"
                 component={SwapScreen}
                 options={{
-                    tabBarLabelStyle: {fontSize: 9},
-                    tabBarLabel: t('menu_swap'),
-                    tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
-                    tabBarActiveTintColor: theme.button,
-                    tabBarIcon: ({color, size}) => (
-                        <Icon
-                            name={'swap-horizontal'}
-                            size={size}
-                            type={Icons.Ionicons}
-                            color={color}
-                        />
-                    ),
-                }}
-            /> */}
-            <Tab.Screen
-                name="DummySwapScreen"
-                component={DummySwapScreen}
-                options={{
-                    tabBarLabelStyle: {fontSize: 9},
-                    tabBarLabel: t('menu_swap'),
+                    tabBarLabelStyle: {fontSize: 8},
+                    tabBarLabel: 'Swap',
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (
@@ -165,15 +126,15 @@ function BottomTabBarNavigator() {
                 name="DAppsScreen"
                 component={DAppsScreen}
                 options={{
-                    tabBarLabelStyle: {fontSize: 9},
-                    tabBarLabel: t('menu_dapps'),
+                    tabBarLabelStyle: {fontSize: 8},
+                    tabBarLabel: 'Browser',
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (
                         <Icon
-                            name="th-large"
+                            name="navigate-circle"
                             size={size}
-                            type={Icons.FontAwesome}
+                            type={Icons.Ionicons}
                             color={color}
                         />
                     ),
@@ -184,7 +145,7 @@ function BottomTabBarNavigator() {
                 component={SettingScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 9},
-                    tabBarLabel: t('menu_setup'),
+                    tabBarLabel: 'Setup',
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (

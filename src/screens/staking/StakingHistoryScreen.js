@@ -9,47 +9,55 @@ import CommonBackButton from '@components/commons/CommonBackButton';
 import CommonLoading from '@components/commons/CommonLoading';
 import Balance from '@components/Balance';
 import {useTranslation} from 'react-i18next';
-import {WalletFactory} from '@modules/core/factory/WalletFactory';
 import {ethers} from 'ethers';
-import StakingContract from '@contracts/VStaking.json';
 import moment from 'moment-timezone';
 import CommonFlatList from '@components/commons/CommonFlatList';
 import {StakingAction} from '@persistence/staking/StakingAction';
 import CommonAlert from '@components/commons/CommonAlert';
 import useWalletHook from '@persistence/wallet/WalletHook';
+import _ from 'lodash';
 
 function StakingHistoryScreen({navigation, route}) {
+    const {item: stakeItem} = route.params;
     const {theme} = useSelector(state => state.ThemeReducer);
-    const {vcoin} = useWalletHook();
+    const [chain, setChain] = useState(stakeItem.chain);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const {stakedHistory} = useSelector(state => state.StakingReducer);
     const [refreshing, setRefreshing] = useState(false);
+    const {getByKuKuByChain} = useWalletHook();
+    const duku = getByKuKuByChain(chain);
+    console.log('asdsadsad');
     useEffect(() => {
         (async () => {
-            dispatch(StakingAction.getStakingHistory(vcoin.walletAddress));
+            if (!_.isNil(duku?.walletAddress)) {
+                dispatch(
+                    StakingAction.getStakingHistory(chain, duku?.walletAddress),
+                );
+            }
         })();
-    }, []);
+    }, [duku?.walletAddress]);
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        dispatch(StakingAction.getStakingHistory(vcoin.walletAddress)).then(
-            () => {
-                setRefreshing(false);
-            },
-        );
+        dispatch(
+            StakingAction.getStakingHistory(chain, duku?.walletAddress),
+        ).then(() => {
+            setRefreshing(false);
+        });
     }, []);
-    const calculateRewards = ({amount, claimedRewards, timestamp}) => {
+    const calculateRewards = ({amount, claimedRewards, timestamp, rate}) => {
         const startTimestamp = timestamp;
         const endTimestamp = Math.floor(Date.now() / 1000);
         // Calculate the duration in milliseconds
         const durationInSeconds = endTimestamp - startTimestamp;
         // Convert the duration to seconds
         // Annual rate as a decimal (e.g., 0.05 for 5%)
-        const annualRateDecimal = 0.105;
         // Convert annual rate to rate per second
-        const ratePerSecond = annualRateDecimal / (365 * 24 * 60 * 60); // 1 year = 365 days
+        const ratePerSecond = rate / (365 * 24 * 60 * 60); // 1 year = 365 days
+        const total =
+            amount * ratePerSecond * durationInSeconds - claimedRewards;
         // Calculate rewards
-        return amount * ratePerSecond * durationInSeconds - claimedRewards;
+        return parseFloat(total).toFixed(10);
     };
     const renderItem = ({item}) => {
         const isStaking = item.status === 0;
@@ -71,7 +79,10 @@ function StakingHistoryScreen({navigation, route}) {
                 <View style={styles.itemInformationContainer}>
                     <View style={{flex: 1}}>
                         <CommonText style={{color: theme.text2}}>
-                            Staked: <Balance>{item.amount}</Balance>
+                            Staked:{' '}
+                            <Balance style={{color: theme.text2}}>
+                                {item.amount}
+                            </Balance>
                         </CommonText>
                         <CommonText
                             style={[styles.descText, {color: theme.subText}]}>
@@ -82,27 +93,14 @@ function StakingHistoryScreen({navigation, route}) {
                     <View style={{alignItems: 'flex-end'}}>
                         <CommonTouchableOpacity
                             onPress={async () => {
-                                const wallet = await WalletFactory.getWallet(
-                                    'BSC',
+                                dispatch(
+                                    StakingAction.claimRewards(
+                                        chain,
+                                        item.index,
+                                    ),
                                 );
-                                const stakingContract = new ethers.Contract(
-                                    '0x39DCE9484dE72E199D40756cE2436C56a6106f7e',
-                                    StakingContract.abi,
-                                    wallet.signer,
-                                );
-                                const gasPrice = ethers.utils.parseUnits(
-                                    '8',
-                                    'gwei',
-                                );
-                                const gasLimit = 2000000; // Adjust this value based on the complexity of the transaction
-                                const tx = await stakingContract.claimRewards(
-                                    item.index,
-                                    {
-                                        gasPrice,
-                                        gasLimit,
-                                    },
-                                );
-                                console.log('claimRewards successfully:', tx);
+
+                                console.log('claimRewards successfully:');
                             }}>
                             <Balance
                                 decimals={8}
@@ -119,36 +117,44 @@ function StakingHistoryScreen({navigation, route}) {
                                         '8',
                                         'gwei',
                                     );
-                                    const gasLimit = 2000000; // Adjust this value based on the complexity of the transaction
+                                    const gasLimit = 200000; // Adjust this value based on the complexity of the transaction
                                     CommonLoading.show();
-                                    dispatch(
-                                        StakingAction.unstake({
-                                            index: item.index,
-                                            gasLimit,
-                                            gasPrice,
-                                        }),
-                                    ).then(({success, data}) => {
-                                        CommonLoading.hide();
-                                        if (success === false) {
-                                            CommonAlert.show({
-                                                title: t('alert.error'),
-                                                message:
-                                                    t('staking.lock_still'),
-                                                type: 'error',
-                                            });
-                                            return;
-                                        }
+                                    try {
                                         dispatch(
-                                            StakingAction.getStakingHistory(
-                                                vcoin.walletAddress,
-                                            ),
-                                        );
-                                        dispatch(
-                                            StakingAction.getStakedBalance(
-                                                vcoin.walletAddress,
-                                            ),
-                                        );
-                                    });
+                                            StakingAction.unstake({
+                                                chain,
+                                                index: item.index,
+                                                gasPrice,
+                                                gasLimit,
+                                            }),
+                                        ).then(({success, data}) => {
+                                            //console.log(data);
+                                            CommonLoading.hide();
+                                            if (success === false) {
+                                                CommonAlert.show({
+                                                    title: t('alert.error'),
+                                                    message:
+                                                        t('staking.lock_still'),
+                                                    type: 'error',
+                                                });
+                                                return;
+                                            }
+                                            dispatch(
+                                                StakingAction.getStakingHistory(
+                                                    chain,
+                                                    duku?.walletAddress,
+                                                ),
+                                            );
+                                            dispatch(
+                                                StakingAction.getStakedBalance(
+                                                    chain,
+                                                    duku?.walletAddress,
+                                                ),
+                                            );
+                                        });
+                                    } catch (e) {
+                                        console.log(e);
+                                    }
                                 }}>
                                 <CommonText style={{color: theme.shortColor}}>
                                     Unstake
@@ -202,14 +208,14 @@ function StakingHistoryScreen({navigation, route}) {
                             </CommonText>
                             <Balance
                                 style={[styles.balance, {color: theme.text2}]}
-                                symbol={' Azure'}>
-                                {vcoin.balance}
+                                symbol={duku?.symbol}>
+                                {duku?.balance}
                             </Balance>
                         </View>
                     </View>
                     <CommonFlatList
                         renderItem={renderItem}
-                        keyExtractor={item => item.index}
+                        keyExtractor={ite => ite.index}
                         data={stakedHistory}
                         refreshControl={
                             <RefreshControl

@@ -1,9 +1,9 @@
-import { StakingService } from "@persistence/staking/StakingService";
+import {StakingService} from '@persistence/staking/StakingService';
 import {
-  getStakedBalanceSuccess,
-  getStakedHistorySuccess,
-  getTotalStakedBalanceSuccess,
-} from "@persistence/staking/StakingReducer";
+    getStakedBalanceSuccess,
+    getStakedHistorySuccess,
+    getTotalStakedBalanceSuccess,
+} from '@persistence/staking/StakingReducer';
 
 export const StakingAction = {
     getTotalStakedBalance,
@@ -12,59 +12,74 @@ export const StakingAction = {
     stake,
     unstake,
     claimRewards,
-    checkRewards
+    checkRewards,
 };
 
-function getTotalStakedBalance() {
+function getTotalStakedBalance(chain) {
     return async dispatch => {
-        const { success,data } = await StakingService.getTotalStakedBalance();
-        if(success === true){
+        const {success, data} = await StakingService.getTotalStakedBalance(
+            chain,
+        );
+
+        if (success === true) {
             dispatch(getTotalStakedBalanceSuccess(data));
         }
-        return { success,data };
+        return {success, data};
     };
 }
-function getStakedBalance(walletAddress) {
+function getStakedBalance(chain, walletAddress) {
     return async dispatch => {
-        const { success,data } = await StakingService.getStakedBalance(walletAddress);
-        if(success === true){
+        const {success, data} = await StakingService.getStakedBalance(
+            chain,
+            walletAddress,
+        );
+
+        if (success === true) {
             dispatch(getStakedBalanceSuccess(data));
         }
-        return { success,data };
+        return {success, data};
     };
 }
-function getStakingHistory(walletAddress) {
+function getStakingHistory(chain, walletAddress) {
     return async dispatch => {
-        const { success,data } = await StakingService.getStakingHistory(walletAddress);
-        if(success === true){
+        const {success, data} = await StakingService.getStakingHistory(
+            chain,
+            walletAddress,
+        );
+        if (success === true) {
             dispatch(getStakedHistorySuccess(data));
         }
-        return { success,data };
+        return {success, data};
     };
 }
 function stake(params) {
     return async dispatch => {
-        const { success,data } = await StakingService.stake(params);
-        return { success,data };
+        const {success, data} = await StakingService.stake(params);
+        return {success, data};
     };
 }
-function unstake(index) {
+function unstake({chain, index, gasLimit, gasPrice}) {
     return async dispatch => {
-        const { success,data } = await StakingService.unstake(index);
-        return { success,data };
+        const {success, data} = await StakingService.unstake({
+            chain,
+            index,
+            gasLimit,
+            gasPrice,
+        });
+        return {success, data};
     };
 }
 
-function claimRewards(index) {
+function claimRewards(chain, index) {
     return async dispatch => {
-        const { success,data } = await StakingService.claimRewards(index);
-        return { success,data };
+        const {success, data} = await StakingService.claimRewards(chain, index);
+        return {success, data};
     };
 }
 
-function checkRewards(index) {
+function checkRewards(chain, index) {
     return async dispatch => {
-        const { success,data } = await StakingService.checkRewards(index);
-        return { success,data };
+        const {success, data} = await StakingService.checkRewards(chain, index);
+        return {success, data};
     };
 }

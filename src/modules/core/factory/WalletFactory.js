@@ -164,7 +164,6 @@ export class WalletFactory {
                         ethWallet = new EthWallet(provider);
                         const {success, data} = await ethWallet.fromPrivateKey(
                             coin,
-                            coin.privateKey,
                         );
                         if (success) {
                             ethWallet.setData(data);
@@ -305,6 +304,7 @@ export class WalletFactory {
     static async sendTransaction(chain, transaction) {
         try {
             const wallet = await this.getWallet(chain);
+            console.log(wallet);
             return await wallet.sendTransaction(transaction);
         } catch (e) {
             Logs.info('WalletFactory: sendTransaction', e);
@@ -472,7 +472,12 @@ export class WalletFactory {
     }
 
     static async getTokenBalance(tokens) {
-        const updatedTokens = [...tokens];
+        const updatedTokens = _.map(tokens, function (token) {
+            return {
+                ...token,
+                balance: 0,
+            };
+        });
         try {
             const tokensByChain = _.groupBy(tokens, 'chain');
             for (const [key, value] of Object.entries(tokensByChain)) {
@@ -523,7 +528,8 @@ export class WalletFactory {
                                     function (e) {
                                         return (
                                             e.contract.toLowerCase() ===
-                                            tokenBalance.token_address.toLowerCase()
+                                                tokenBalance.token_address.toLowerCase() &&
+                                            e.chain === key
                                         );
                                     },
                                 );
@@ -542,6 +548,8 @@ export class WalletFactory {
                                     result.trc20token_balances,
                                     {tokenId: value[ti].contract},
                                 );
+                                console.log(result.trc20token_balances);
+                                console.log(value[ti].contract);
                                 let balance = 0;
                                 if (findIndex !== -1) {
                                     balance = formatUnits(
@@ -554,6 +562,7 @@ export class WalletFactory {
                                 const walletIndex = _.findIndex(tokens, {
                                     contract: value[ti].contract,
                                 });
+                                console.log(updatedTokens[walletIndex]);
                                 updatedTokens.splice(walletIndex, 1, {
                                     ...tokens[walletIndex],
                                     balance: balance,

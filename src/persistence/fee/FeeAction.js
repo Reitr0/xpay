@@ -8,7 +8,7 @@ export const FeeAction = {
 function getFee(params) {
     return async dispatch => {
         const {success, data} = await FeeService.getFee(params);
-        if (success) {
+        if (success === true) {
             dispatch(getFeeSuccess(data));
         }
         return {success, data};

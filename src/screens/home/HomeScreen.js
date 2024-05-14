@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useCallback, useEffect, useState, useMemo} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Dimensions, SafeAreaView, StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {WalletAction} from '@persistence/wallet/WalletAction';
@@ -11,9 +11,15 @@ import CommonImage from '@components/commons/CommonImage';
 import CommonLoading from '@components/commons/CommonLoading';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
+import Price from '@components/Price';
+import CommonButton from '@components/commons/CommonButton';
+import Balance from '@components/Balance';
 import {WalletFactory} from '@modules/core/factory/WalletFactory';
 import NftImage from '@components/NftImage';
 import {NftsFactory} from '@modules/core/factory/NftsFactory';
+import usePriceHook from '@persistence/price/PriceHook';
+import NumberFormatted from '@components/NumberFormatted';
+import AddTokenScreen from '@screens/token/AddTokenScreen';
 import CoinList from '@screens/home/CoinList';
 import TotalBalance from '@components/TotalBalance';
 
@@ -21,6 +27,8 @@ function HomeScreen() {
     const {t} = useTranslation();
     const navigation = useNavigation();
     const {activeWallet} = useSelector(state => state.WalletReducer);
+    const {unread} = useSelector(state => state.NotifyReducer);
+
     const {theme} = useSelector(state => state.ThemeReducer);
     const [tab, setTab] = useState('Tokens');
     const dispatch = useDispatch();
@@ -33,14 +41,13 @@ function HomeScreen() {
             setRefreshing(false);
             CommonLoading.hide();
         });
-    }, [dispatch, loadNfts]);
+    }, []);
     useEffect(() => {
         (async () => {
             await loadNfts();
         })();
-    }, [activeWallet.chain, loadNfts]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const loadNfts = useCallback(async () => {
+    }, [activeWallet.chain]);
+    const loadNfts = async () => {
         setTimeout(async () => {
             const ethWallet = await WalletFactory.getWallet('ETH');
             const result = await NftsFactory.getNfts(
@@ -49,9 +56,9 @@ function HomeScreen() {
             );
             setNfts(result);
         }, 1000);
-    });
+    };
 
-    const renderNftItem = ({item}) => {
+    const renderNftItem = ({item, index}) => {
         return (
             <CommonTouchableOpacity
                 style={styles.nftItem}
@@ -86,13 +93,11 @@ function HomeScreen() {
                 <CommonImage
                     source={require('@assets/images/logo2.png')}
                     style={styles.logo}
-                    onPress={() => {
-                        navigation.navigate('AddTokenScreen');
-                    }}
                 />
+                <View style={[styles.rightHeader]} />
             </View>
             <View style={[styles.balanceContainer]}>
-                <TotalBalance style={styles.balanceText} />
+                <TotalBalance decimals={2} style={styles.balanceText} />
                 <CommonText style={styles.walletNameText}>
                     {activeWallet.name}
                 </CommonText>
@@ -160,6 +165,25 @@ function HomeScreen() {
                         />
                     </View>
                     <CommonText>{t('wallet.buy')}</CommonText>
+                </CommonTouchableOpacity>
+                <CommonTouchableOpacity
+                    style={styles.actionItem}
+                    onPress={() => {
+                        navigation.navigate('AddTokenScreen', {});
+                    }}>
+                    <View
+                        style={[
+                            styles.actionIcon,
+                            {backgroundColor: theme.homeButton},
+                        ]}>
+                        <Icon
+                            type={Icons.Ionicons}
+                            size={18}
+                            name={'add-outline'}
+                            color={theme.text}
+                        />
+                    </View>
+                    <CommonText>{t('import_import_wallet')}</CommonText>
                 </CommonTouchableOpacity>
             </View>
             <View
@@ -362,10 +386,8 @@ const styles = StyleSheet.create({
     logo: {
         width: 48,
         height: 48,
-        borderWidth: 5,
-        borderColor: '#ffffff',
-        backgroundColor: '#ffffff',
         borderRadius: 100,
+        backgroundColor: '#fff',
     },
     nftItem: {
         width: Dimensions.get('screen').width / 2 - 20,

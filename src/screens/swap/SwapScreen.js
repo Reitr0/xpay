@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     RefreshControl,
     SafeAreaView,
@@ -33,11 +33,12 @@ import {WalletFactory} from '@modules/core/factory/WalletFactory';
 import BigNumber from 'bignumber.js';
 import {WalletAction} from '@persistence/wallet/WalletAction';
 import Balance from '@components/Balance';
+import ActionSheet from 'react-native-actions-sheet';
 
 export default function SwapScreen({navigation, route}) {
     const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
-    const {fee} = useSelector(state => state.FeeReducer);
+    const actionSheetRef = useRef(null);
     const [fromToken, setFromToken] = useState({});
     const [toToken, setToToken] = useState({});
     const [fromTokenAmount, setFromTokenAmount] = useState('');
@@ -50,9 +51,12 @@ export default function SwapScreen({navigation, route}) {
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false);
     const [platform, setPlatform] = useState(activeWallet.defaultChain);
+    const {fee: feeData} = useSelector(state => state.FeeReducer);
+    const [fee, setFee] = useState(feeData[activeWallet.defaultChain]);
     useEffect(() => {
         (async () => {
             onChangeActiveAsset(platform);
+            CommonLoading.hide();
         })();
     }, [activeWallet.defaultChain]);
     const onChangeActiveAsset = chain => {
@@ -145,13 +149,16 @@ export default function SwapScreen({navigation, route}) {
             sellAmount: sellAmount,
             slippagePercentage: slippagePercentage,
         };
+        console.log(params);
+        console.log(fee);
         if (fee.enabled === true) {
             params.buyTokenPercentageFee = fee.rate / 100;
-            params.feeRecipient = fee.ethAddress;
+            params.feeRecipient = fee.address;
         }
         if (exact === true) {
             params.takerAddress = activeWallet.activeAsset.walletAddress;
         }
+        console.log(params);
         try {
             const resQuote = await OxService.getQuote(
                 activeWallet.activeAsset.chain,
@@ -398,12 +405,13 @@ export default function SwapScreen({navigation, route}) {
                         <View style={styles.segmentContainer}>
                             <CommonTouchableOpacity
                                 onPress={() => {
-                                    onChangePlatform('TRON');
-                                    setPlatform('TRON');
+                                    onChangePlatform('ETH');
+                                    setPlatform('ETH');
+                                    setFee(feeData.ETH);
                                 }}
                                 style={[
                                     styles.segmentItem,
-                                    platform === 'TRON'
+                                    platform === 'ETH'
                                         ? {
                                               backgroundColor: theme.button,
                                               borderRadius: 10,
@@ -413,17 +421,18 @@ export default function SwapScreen({navigation, route}) {
                                 <CommonText
                                     style={{
                                         color:
-                                            platform === 'TRON'
+                                            platform === 'ETH'
                                                 ? theme.text
                                                 : theme.subText,
                                     }}>
-                                    TRC20
+                                    ERC20
                                 </CommonText>
                             </CommonTouchableOpacity>
                             <CommonTouchableOpacity
                                 onPress={() => {
                                     onChangePlatform('BSC');
                                     setPlatform('BSC');
+                                    setFee(feeData.BSC);
                                 }}
                                 style={[
                                     styles.segmentItem,
@@ -442,6 +451,31 @@ export default function SwapScreen({navigation, route}) {
                                                 : theme.subText,
                                     }}>
                                     BEP20
+                                </CommonText>
+                            </CommonTouchableOpacity>
+                            <CommonTouchableOpacity
+                                onPress={() => {
+                                    onChangePlatform('POLYGON');
+                                    setPlatform('POLYGON');
+                                    setFee(feeData.POLYGON);
+                                }}
+                                style={[
+                                    styles.segmentItem,
+                                    platform === 'POLYGON'
+                                        ? {
+                                              backgroundColor: theme.button,
+                                              borderRadius: 10,
+                                          }
+                                        : {},
+                                ]}>
+                                <CommonText
+                                    style={{
+                                        color:
+                                            platform === 'POLYGON'
+                                                ? theme.text
+                                                : theme.subText,
+                                    }}>
+                                    POLYGON
                                 </CommonText>
                             </CommonTouchableOpacity>
                         </View>
@@ -628,12 +662,20 @@ export default function SwapScreen({navigation, route}) {
                                 styles.quoteContainer,
                                 {borderBottomColor: theme.border},
                             ]}
-                            onPress={() => {}}>
+                            onPress={() => {
+                                actionSheetRef?.current.show();
+                            }}>
                             <CommonText style={{color: theme.text2}}>
                                 {t('swap.slippage')}
                             </CommonText>
                             <CommonText style={{color: theme.text2}}>
-                                {slippagePercentage * 100}%
+                                {slippagePercentage * 100}%{' '}
+                                <Icon
+                                    type={Icons.FontAwesome}
+                                    size={18}
+                                    name={'edit'}
+                                    style={{marginTop: 15}}
+                                />
                             </CommonText>
                         </CommonTouchableOpacity>
                         <CommonTouchableOpacity
@@ -646,7 +688,7 @@ export default function SwapScreen({navigation, route}) {
                                 Commission Fee
                             </CommonText>
                             <CommonText style={{color: theme.text2}}>
-                                0.001
+                                {fee?.rate}%
                             </CommonText>
                         </CommonTouchableOpacity>
                         <View
@@ -680,19 +722,80 @@ export default function SwapScreen({navigation, route}) {
                         <CommonButton
                             text={
                                 !quote || !isEnough
-                                    ? t('swap.comingsoon')
+                                    ? t('swap.continue')
                                     : t('swap.swap')
                             }
-                            // onPress={async () => {
-                            //     if (quote && isEnough) {
-                            //         await swap();
-                            //     } else {
-                            //         await getQuote();
-                            //     }
-                            // }}
+                            onPress={async () => {
+                                if (quote && isEnough) {
+                                    await swap();
+                                } else {
+                                    try {
+                                        await getQuote();
+                                    } catch (e) {
+                                        console.log(e);
+                                    }
+                                }
+                            }}
                         />
                     </View>
                 </ScrollView>
+                <ActionSheet
+                    ref={actionSheetRef}
+                    gestureEnabled={true}
+                    containerStyle={{
+                        backgroundColor: theme.background2,
+                        padding: 10,
+                    }}
+                    headerAlwaysVisible>
+                    <View style={styles.slippageContainer}>
+                        <View
+                            style={[
+                                styles.inputView,
+                                {backgroundColor: theme.inputBackground},
+                            ]}>
+                            <TextInput
+                                style={[styles.input, {color: theme.inputText}]}
+                                onChangeText={v => setSlippageText(v)}
+                                value={`${slippageText}`}
+                                placeholder={'Slippage'}
+                                numberOfLines={1}
+                                returnKeyType="done"
+                                placeholderTextColor="gray"
+                                autoCompleteType={'off'}
+                                autoCapitalize={'none'}
+                                autoCorrect={false}
+                                onEndEditing={async () => {}}
+                            />
+                        </View>
+                        <View style={styles.slippageButton}>
+                            <CommonButton
+                                text={t('tx.next')}
+                                onPress={async () => {
+                                    if (
+                                        slippageText > 0 &&
+                                        slippageText < 100
+                                    ) {
+                                        setSlippagePercentage(
+                                            slippageText / 100,
+                                        );
+                                        actionSheetRef.current?.hide();
+                                    } else {
+                                        CommonAlert.show({
+                                            title: t('alert.error'),
+                                            message:
+                                                'Slippage musts between 1 and 99',
+                                            type: 'error',
+                                        });
+                                    }
+                                }}
+                                style={{
+                                    backgroundColor: '#fbcd00',
+                                    marginTop: 10,
+                                }}
+                            />
+                        </View>
+                    </View>
+                </ActionSheet>
             </SafeAreaView>
         </View>
     );
@@ -868,5 +971,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    slippageContainer: {
+        height: 150,
+        width: '100%',
+    },
+    slippageButton: {
+        paddingHorizontal: 5,
     },
 });

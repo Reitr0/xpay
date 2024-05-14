@@ -16,19 +16,21 @@ function SplashScreen({navigation}) {
             dispatch(ThemeAction.set());
             dispatch(AppLockAction.getAppLock());
             dispatch(CurrencyAction.getCurrency());
-            dispatch(UserAction.get()).then(user => {
-                if (user.registered) {
-                    dispatch(WalletAction.findAll());
-                }
-                const nextScreen = user.registered
-                    ? 'EnterPinCodeScreen'
-                    : 'WalkThroughScreen';
-                navigation.navigate(nextScreen);
-            });
+            setTimeout(() => {
+                dispatch(UserAction.get()).then(user => {
+                    if (user.registered) {
+                        dispatch(WalletAction.findAll());
+                    }
+                    const nextScreen = user.registered
+                        ? 'EnterPinCodeScreen'
+                        : 'WalkThroughScreen';
+                    navigation.navigate(nextScreen);
+                });
+            }, 2000);
         })();
-    }, [dispatch, navigation]);
+    }, []);
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: '#0cc0df'}]}>
             <CommonImage
                 source={require('@assets/images/logo.png')}
                 style={styles.logo}

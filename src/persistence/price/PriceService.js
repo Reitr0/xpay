@@ -1,4 +1,5 @@
 import React from 'react';
+import CommonAPI from '@modules/api/CommonAPI';
 import ReduxStore from '@modules/redux/ReduxStore';
 
 export const PriceService = {
