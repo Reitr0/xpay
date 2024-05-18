@@ -11,6 +11,7 @@ import SwapScreen from '@screens/swap/SwapScreen';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import StakingScreen from '@screens/staking/StakingScreen';
 import NftScreen from '@screens/nft/NftScreen';
+import DummySwapScreen from '@screens/swap/DummySwapScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -105,8 +106,8 @@ function BottomTabBarNavigator() {
                 }}
             />
             <Tab.Screen
-                name="SwapScreen"
-                component={SwapScreen}
+                name="DummySwapScreen"
+                component={DummySwapScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 8},
                     tabBarLabel: 'Swap',

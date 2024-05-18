@@ -4,6 +4,7 @@ import {applicationProperties} from '@src/application.properties';
 const instance = axios.create({
     baseURL: applicationProperties.endpoints.app.url,
 });
+
 const post = async (url, params) => {
     return await instance
         .post(url, params)
@@ -22,9 +23,11 @@ const post = async (url, params) => {
         });
 };
 const get = async (url, params) => {
+    console.log('tessssPrm', params);
     return await instance
         .get(url, params)
         .then(res => {
+            console.log('response didalem', res);
             return {
                 success: true,
                 data: res.data,

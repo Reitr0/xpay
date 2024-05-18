@@ -43,7 +43,7 @@ export default function DAppsScreen({navigation, route}) {
             item: {name: finalUrl, url: finalUrl},
         });
     };
-    const renderItem = ({item}) => {
+    const renderItem = ({item, index}) => {
         return (
             <CommonTouchableOpacity
                 style={[styles.item, {backgroundColor: theme.background}]}
@@ -54,13 +54,14 @@ export default function DAppsScreen({navigation, route}) {
                     <View style={styles.leftItemContainer}>
                         <View style={[styles.iconContainer]}>
                             <CommonImage
-                                source={{uri: item.logo}}
+                                // source={{uri: item.logo}}
+                                source={require('@assets/images/METAIcon.png')}
                                 style={styles.iconContainer}
                             />
                         </View>
                         <View style={{flex: 1, paddingHorizontal: 10}}>
                             <CommonText style={{color: theme.text2}}>
-                                {item.name}
+                                {t(`dapps.name${index}`)}
                             </CommonText>
                             <CommonText
                                 style={{color: theme.subText}}
@@ -119,7 +120,6 @@ export default function DAppsScreen({navigation, route}) {
                     ]}>
                     <CommonFlatList
                         data={applicationProperties.dapps}
-                        style={{marginTop: 10}}
                         renderItem={renderItem}
                         keyExtractor={item => item.name}
                     />
@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     iconContainer: {
-        width: 42,
-        height: 42,
+        width: 50,
+        height: 50,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',

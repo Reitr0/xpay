@@ -43,4 +43,8 @@ export const configProperties = {
         api: 'https://api.coingecko.com/api/v3/',
         key: 'CG-FUxEdRfN9kCaYKtz9MXawP1x',
     },
+    trc20: {
+        api: 'https://apilist.tronscan.org/api/token?id=',
+        key: '',
+    },
 };
