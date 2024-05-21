@@ -31,6 +31,7 @@ export default function AddTokenScreen({navigation, route}) {
         verified: false,
     });
     useEffect(() => {
+        console.log('net', network.chain);
         (async () => {})();
     }, [network.chain]);
     const fetchTokenMetaData = async () => {
@@ -172,7 +173,7 @@ export default function AddTokenScreen({navigation, route}) {
                                 }}
                                 style={styles.moreBtn}>
                                 <Icon
-                                    name="paste"
+                                    name="paperclip"
                                     size={20}
                                     color={theme.text2}
                                     type={Icons.Octicons}
@@ -306,7 +307,7 @@ export default function AddTokenScreen({navigation, route}) {
                                         token.logo ||
                                         applicationProperties.logoURI.noImage;
                                 } else if (network.chain === 'TRON') {
-                                    chainId = 999;
+                                    chainId = 1;
                                     logo =
                                         token.logo ||
                                         applicationProperties.logoURI.noImage;
@@ -320,10 +321,12 @@ export default function AddTokenScreen({navigation, route}) {
                                         verified: false,
                                     };
                                     CommonLoading.show();
+                                    //kepentok disini
                                     const {
                                         success: getTokenSuccess,
                                         data: coin,
                                     } = await TokenService.getTokenId(data);
+                                    //sampe sini
                                     if (getTokenSuccess === true) {
                                         data.id = coin.id;
                                         dispatch(

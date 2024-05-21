@@ -30,7 +30,7 @@ function SplashScreen({navigation}) {
         })();
     }, []);
     return (
-        <View style={[styles.container, {backgroundColor: '#0cc0df'}]}>
+        <View style={[styles.container, {backgroundColor: '#fff'}]}>
             <CommonImage
                 source={require('@assets/images/logo.png')}
                 style={styles.logo}

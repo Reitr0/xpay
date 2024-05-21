@@ -458,9 +458,7 @@ export default function WalletSendScreen({navigation}) {
                                     </CommonText>
                                     <Balance
                                         style={{color: theme.text2}}
-                                        symbol={
-                                            activeWallet.activeAsset.symbol
-                                        }>
+                                        symbol={activeWallet.activeAsset.chain}>
                                         {estimatedGasFee.estimateGas?.ether * 2}
                                     </Balance>
                                 </View>

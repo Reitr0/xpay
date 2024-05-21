@@ -34,14 +34,14 @@ export default function TokenScreen({navigation, route}) {
         (async () => {
             setData(ALL);
         })();
-    }, [ALL.length]);
+    }, [ALL, ALL.length]);
     useEffect(() => {
         (async () => {
             dispatch(
                 TokenAction.getAllTokens(activeWallet.chain, activeWallet.type),
             );
         })();
-    }, []);
+    }, [activeWallet.chain, activeWallet.type, dispatch]);
 
     const addAsset = item => {
         CommonLoading.show();
@@ -84,7 +84,10 @@ export default function TokenScreen({navigation, route}) {
                             {CHAIN_ID_TYPE_MAP[item.chainId]} Network
                         </CommonText>
                     </View>
-                    {!_.includes(['duku', 'pankuku', 'worlddkuku'], item.id) && (
+                    {!_.includes(
+                        ['duku', 'pankuku', 'worlddkuku', 'xusdt'],
+                        item.id,
+                    ) && (
                         <CommonTouchableOpacity
                             style={styles.switcher}
                             onPress={async () => {

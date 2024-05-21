@@ -52,12 +52,20 @@ const initProvider = () => {
             apiKey: '0327edd7-48f8-41a2-ab57-efa9f7ccfe5a',
             testnet: false,
         },
+        {
+            chain: 'TRC20',
+            apiEndpoint:
+                'https://apilist.tronscan.org/api/token?id=TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL',
+            explore:
+                'https://tronscan.org/#/token20/TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL',
+            testnet: false,
+        },
     ]);
 };
 
 const initWebSocket = async () => {
     await WSSClient.connect({
-        header: { token: '' },
+        header: {token: ''},
         callBack: null,
     });
 };

@@ -178,5 +178,24 @@
     "value": 0,
     "version": 1,
     "walletAddress": null
+  },
+  {
+    "active": true,
+    "balance": 0,
+    "buyable": false,
+    "chain": "TRON",
+    "cid": "custom-token",
+    "contract": "TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL",
+    "decimals": 18,
+    "logoURI": "https://tronscan.org/static/media/logo.b4fcf1e9.png",
+    "name": "Custom TRC20 Token",
+    "price": 0,
+    "privateKey": null,
+    "swappable": false,
+    "symbol": "CTT",
+    "type": "TOKEN",
+    "unconfirmedBalance": 0,
+    "value": 0,
+    "walletAddress": null
   }
 ]

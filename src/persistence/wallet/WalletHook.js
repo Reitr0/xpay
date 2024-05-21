@@ -1,13 +1,14 @@
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import _ from 'lodash';
-import {duku_erc20, duku_bep20} from '@modules/core/constant/constant';
-import usePriceHook from "@persistence/price/PriceHook";
+import {duku_erc20, duku_bep20, xusdt} from '@modules/core/constant/constant';
+import usePriceHook from '@persistence/price/PriceHook';
 
 export default function useWalletHook() {
     const {activeWallet} = useSelector(state => state.WalletReducer);
     const [wallets, setWallets] = useState({});
     const [dukuErc20, setDukuErc20] = useState({});
+    const [Xusdt, setXusdt] = useState({});
     const [dukuBep20, setDukuBep20] = useState({});
     useEffect(() => {
         const walletObject = {};
@@ -20,6 +21,11 @@ export default function useWalletHook() {
         setWallets(walletObject);
         const kukuErc20 = _.find(activeWallet.tokens, {
             id: duku_erc20.id,
+            chain: 'ETH',
+        });
+        setXusdt(exusdt);
+        const exusdt = _.find(activeWallet.tokens, {
+            id: xusdt.id,
             chain: 'ETH',
         });
         setDukuErc20(kukuErc20);
@@ -37,6 +43,7 @@ export default function useWalletHook() {
         wallets,
         dukuErc20,
         dukuBep20,
+        Xusdt,
         getByKuKuByChain,
     };
 }
@@ -45,12 +52,15 @@ export function useWalletList() {
     const [wallets, setWallets] = useState([]);
     const {getPriceData} = usePriceHook();
     useEffect(() => {
-        const orderWalletByTotal = _.map([...activeWallet.coins, ...activeWallet.tokens], function(item){
-            return {
-                ...item,
-                usdValue : item.balance * getPriceData(item.id, 0)
-            }
-        })
+        const orderWalletByTotal = _.map(
+            [...activeWallet.coins, ...activeWallet.tokens],
+            function (item) {
+                return {
+                    ...item,
+                    usdValue: item.balance * getPriceData(item.id, 0),
+                };
+            },
+        );
         const orderedWallets = _.orderBy(
             orderWalletByTotal,
             ['usdValue'],

@@ -166,25 +166,25 @@ function HomeScreen() {
                     </View>
                     <CommonText>{t('wallet.buy')}</CommonText>
                 </CommonTouchableOpacity>
-                <CommonTouchableOpacity
-                    style={styles.actionItem}
-                    onPress={() => {
-                        navigation.navigate('AddTokenScreen', {});
-                    }}>
-                    <View
-                        style={[
-                            styles.actionIcon,
-                            {backgroundColor: theme.homeButton},
-                        ]}>
-                        <Icon
-                            type={Icons.Ionicons}
-                            size={18}
-                            name={'add-outline'}
-                            color={theme.text}
-                        />
-                    </View>
-                    <CommonText>{t('import_import_wallet')}</CommonText>
-                </CommonTouchableOpacity>
+                {/*<CommonTouchableOpacity*/}
+                {/*    style={styles.actionItem}*/}
+                {/*    onPress={() => {*/}
+                {/*        navigation.navigate('AddTokenScreen', {});*/}
+                {/*    }}>*/}
+                {/*    <View*/}
+                {/*        style={[*/}
+                {/*            styles.actionIcon,*/}
+                {/*            {backgroundColor: theme.homeButton},*/}
+                {/*        ]}>*/}
+                {/*        <Icon*/}
+                {/*            type={Icons.Ionicons}*/}
+                {/*            size={18}*/}
+                {/*            name={'add-outline'}*/}
+                {/*            color={theme.text}*/}
+                {/*        />*/}
+                {/*    </View>*/}
+                {/*    <CommonText>{t('import_import_wallet')}</CommonText>*/}
+                {/*</CommonTouchableOpacity>*/}
             </View>
             <View
                 style={[

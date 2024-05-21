@@ -12,10 +12,12 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import StakingScreen from '@screens/staking/StakingScreen';
 import NftScreen from '@screens/nft/NftScreen';
 import DummySwapScreen from '@screens/swap/DummySwapScreen';
+import {useTranslation} from 'react-i18next';
 
 const Tab = createMaterialTopTabNavigator();
 
 function BottomTabBarNavigator() {
+    const {t} = useTranslation();
     const {theme} = useSelector(state => state.ThemeReducer);
     const {appLock} = useSelector(state => state.AppLockReducer);
     let timeOut = appLock.autoLock;
@@ -75,7 +77,7 @@ function BottomTabBarNavigator() {
                     tabBarLabelStyle: {fontSize: 8},
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
-                    tabBarLabel: 'Wallet',
+                    tabBarLabel: t('Wallet'),
                     tabBarIcon: ({color, size}) => (
                         <Icon
                             name="wallet-outline"
@@ -92,7 +94,7 @@ function BottomTabBarNavigator() {
                 component={MarketScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 8},
-                    tabBarLabel: 'Market',
+                    tabBarLabel: t('menu_market'),
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (
@@ -110,7 +112,7 @@ function BottomTabBarNavigator() {
                 component={DummySwapScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 8},
-                    tabBarLabel: 'Swap',
+                    tabBarLabel: t('menu_swap'),
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (
@@ -128,7 +130,7 @@ function BottomTabBarNavigator() {
                 component={DAppsScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 8},
-                    tabBarLabel: 'Browser',
+                    tabBarLabel: t('menu_dapps'),
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (
@@ -146,7 +148,7 @@ function BottomTabBarNavigator() {
                 component={SettingScreen}
                 options={{
                     tabBarLabelStyle: {fontSize: 9},
-                    tabBarLabel: 'Setup',
+                    tabBarLabel: t('menu_setup'),
                     tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
                     tabBarActiveTintColor: theme.button,
                     tabBarIcon: ({color, size}) => (

@@ -119,11 +119,20 @@
   {
     "symbol": "XUSDT",
     "address": "TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL",
-    "chainId": 999,
+    "chainId": 1,
     "decimals": 18,
-    "name": "TetAC-X-USD (XUSDT)",
+    "name": "TetAC-X-USD",
     "logoURI": "https://static.tronscan.org/production/upload/logo/new/TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL.png?t=1715415057068",
     "id": "tetac-x-usd"
+  },
+  {
+    "symbol": "XUSDT",
+    "address": "TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL",
+    "chainId": 999,
+    "decimals": 18,
+    "name": "TetAC-X-USD",
+    "logoURI": "https://static.tronscan.org/production/upload/logo/new/TAZ1dbBfBCELD49obL3Agh9GtYVrp3jkJL.png?t=1715415057068",
+    "id": "tether-pulsechain"
   },
   {
     "symbol": "USDJ",

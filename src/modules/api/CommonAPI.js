@@ -23,11 +23,11 @@ const post = async (url, params) => {
         });
 };
 const get = async (url, params) => {
-    console.log('tessssPrm', params);
+    console.log('testPrm', params);
     return await instance
         .get(url, params)
         .then(res => {
-            console.log('response didalem', res);
+            console.log('response inside', res);
             return {
                 success: true,
                 data: res.data,

@@ -29,6 +29,7 @@
     "@shopify/flash-list": "^1.6.3",
     "@stomp/stompjs": "^6.1.0",
     "@tradle/react-native-http": "^2.0.1",
+    "@trustwallet/wallet-core": "^4.0.42",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/core": "^2.11.0",
     "@walletconnect/qrcode-modal": "^1.8.0",
